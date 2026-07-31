@@ -3,13 +3,13 @@
  * Modular Vanilla JS implementation
  */
 
-// --- SVGs as Data URIs for performance and standalone zero-dependency ---
+// --- Icons ---
 const Icons = {
-    computer: 'data:image/svg+xml;utf8,<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M4 12c0-2.2 1.8-4 4-4h32c2.2 0 4 1.8 4 4v20c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V12z" fill="%2360CDFF"/><path d="M8 12h32v18H8V12z" fill="%231E1E1E"/><path d="M16 40h16v2H16z" fill="%23888"/><path d="M22 36h4v4h-4z" fill="%23aaa"/></svg>',
-    network: 'data:image/svg+xml;utf8,<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="%230078D4"/><path d="M4 24h40M24 4c6 0 10 9 10 20s-4 20-10 20-10-9-10-20S18 4 24 4z" stroke="white" stroke-width="2" fill="none"/></svg>',
-    trash: 'data:image/svg+xml;utf8,<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M12 12h24v28H12z" fill="%23ccc" fill-opacity="0.3" stroke="white" stroke-width="2"/><path d="M8 12h32v4H8z" fill="%2360CDFF"/><path d="M20 8h8v4h-8z" fill="%23888"/></svg>',
-    folder: 'data:image/svg+xml;utf8,<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M4 12c0-2.2 1.8-4 4-4h10l4 4h18c2.2 0 4 1.8 4 4v20c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V12z" fill="%23FFCA28"/><path d="M4 18h40v18c0 2.2-1.8 4-4 4H8c-2.2 0-4-1.8-4-4V18z" fill="%23FFD54F"/></svg>',
-    pdf: 'data:image/svg+xml;utf8,<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M10 4h20l10 10v30H10V4z" fill="%23E23428"/><path d="M30 4v10h10" fill="%23B71C1C" opacity="0.5"/><text x="14" y="32" fill="white" font-family="Arial" font-size="12" font-weight="bold">PDF</text></svg>'
+    computer: 'assets/icons/this-pc.png',
+    network: 'assets/icons/network.png',
+    trash: 'assets/icons/recycle-bin.png',
+    folder: 'assets/icons/certificate.png',
+    pdf: 'assets/icons/resume.png'
 };
 
 // --- App Config & State ---
@@ -37,6 +37,7 @@ const el = (id) => document.getElementById(id);
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
+    WallpaperManager.init();
     DesktopManager.init();
     TaskbarManager.init();
     ClockManager.init();
@@ -44,6 +45,51 @@ document.addEventListener('DOMContentLoaded', () => {
     StartMenuManager.init();
     SelectionManager.init();
 });
+
+// --- Wallpaper Slideshow ---
+const WallpaperManager = {
+    wallpapers: [
+        'assets/wallpapers/wallpaper1.png',
+        'assets/wallpapers/wallpaper2.jpg',
+        'assets/wallpapers/wallpaper3.jpg',
+        'assets/wallpapers/wallpaper4.jpg',
+        'assets/wallpapers/wallpaper5.webp'
+    ],
+    layers: [],
+    current: 0,
+    activeLayer: 0,
+    interval: null,
+
+    init() {
+        for (let i = 0; i < 2; i++) {
+            const layer = document.createElement('div');
+            layer.className = 'wallpaper-layer';
+            document.body.prepend(layer);
+            this.layers.push(layer);
+        }
+
+        this.wallpapers.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
+        this.layers[0].style.backgroundImage = `url("${this.wallpapers[0]}")`;
+        this.layers[0].style.opacity = 1;
+
+        this.interval = setInterval(() => this.next(), 5000);
+    },
+
+    next() {
+        const next = (this.current + 1) % this.wallpapers.length;
+        const from = this.layers[this.activeLayer];
+        const to = this.layers[1 - this.activeLayer];
+        to.style.backgroundImage = `url("${this.wallpapers[next]}")`;
+        from.style.opacity = 0;
+        to.style.opacity = 1;
+        this.current = next;
+        this.activeLayer = 1 - this.activeLayer;
+    }
+};
 
 // --- Desktop & Icons ---
 const DesktopManager = {
