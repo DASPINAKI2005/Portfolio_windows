@@ -1,0 +1,2274 @@
+/* ============================================================
+ * App CSS - full-screen app windows + per-app screen styles
+ * ============================================================ */
+
+#android-root [hidden] {
+    display: none !important;
+}
+
+/* ------------------------------------------------------------
+   App container & chrome
+   ------------------------------------------------------------ */
+
+.android-apps {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.android-apps.has-apps {
+    pointer-events: auto;
+}
+
+.android-app-instance {
+    position: absolute;
+    inset: 0;
+}
+
+.android-app {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--android-statusbar-h) 0 var(--android-navbar-h);
+    overflow: hidden;
+    color: #1f1f23;
+    background: #fff;
+}
+
+.android-app--dark {
+    color: #e9eaec;
+    background: #0f0f11;
+}
+
+.android-app.is-closing {
+    pointer-events: none;
+}
+
+.android-app__topbar {
+    flex: 0 0 auto;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.android-app--light .android-app__topbar {
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.android-app--dark .android-app__topbar {
+    background: #16161a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.android-app__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.android-app__topbtn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    flex: 0 0 auto;
+}
+
+.android-app__topbtn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.android-app__topbtn:active {
+    transform: scale(0.85);
+}
+
+.android-app__content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ------------------------------------------------------------
+   Shared components
+   ------------------------------------------------------------ */
+
+.android-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 18px 16px 6px;
+}
+
+.android-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--g, linear-gradient(135deg, #60a5fa, #a78bfa));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 15px;
+    flex: 0 0 auto;
+}
+
+.android-avatar--lg {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+}
+
+.android-avatar--xl {
+    width: 76px;
+    height: 76px;
+    font-size: 26px;
+}
+
+.android-list {
+    list-style: none;
+}
+
+.android-list__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+}
+
+.android-list__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--g, linear-gradient(135deg, #60a5fa, #a78bfa));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.android-list__icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
+
+.android-list__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.android-list__title {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.android-list__sub {
+    display: block;
+    font-size: 13px;
+    color: rgba(17, 17, 20, 0.6);
+}
+
+.android-app--dark .android-list__sub {
+    color: rgba(233, 234, 236, 0.6);
+}
+
+.android-list__meta {
+    font-size: 12px;
+    color: rgba(17, 17, 20, 0.55);
+    flex: 0 0 auto;
+}
+
+.android-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 22px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background: #1a73e8;
+    transition: transform 0.1s;
+}
+
+.android-btn:active {
+    transform: scale(0.96);
+}
+
+.android-btn--outline {
+    background: transparent;
+    border: 1px solid rgba(17, 17, 20, 0.25);
+    color: inherit;
+}
+
+.android-app--dark .android-btn--outline {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.android-btn--sm {
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 18px;
+}
+
+.android-btn--round {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.android-btn--round svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+}
+
+.android-btn--subscribe {
+    background: #fff;
+    color: #111;
+}
+
+.android-fab {
+    position: absolute;
+    right: 18px;
+    bottom: calc(var(--android-navbar-h) + 16px);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #1a73e8;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.5);
+    z-index: 8;
+}
+
+.android-fab svg {
+    width: 26px;
+    height: 26px;
+    fill: currentColor;
+}
+
+.android-fab:active {
+    transform: scale(0.92);
+}
+
+/* Search pill used across several apps */
+.gmail__search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eef1f4;
+    border-radius: 22px;
+    padding: 8px 14px;
+    color: #5f6368;
+}
+
+.gmail__search svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    flex: 0 0 auto;
+}
+
+.gmail__search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 14px;
+    color: inherit;
+}
+
+/* ============================================================
+   YouTube
+   ============================================================ */
+
+.youtube__channel {
+    padding: 0 16px 14px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+}
+
+.youtube__banner {
+    height: 78px;
+    margin: 0 -16px 8px;
+    background: linear-gradient(120deg, #f43f5e, #f97316);
+}
+
+.youtube__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.youtube__who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.youtube__who strong {
+    font-size: 16px;
+    color: #fff;
+}
+
+.youtube__who span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.youtube__desc {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.72);
+    margin: 10px 0 12px;
+}
+
+.youtube__tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.youtube__tab {
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    padding: 10px 14px;
+    font-size: 14px;
+    position: relative;
+}
+
+.youtube__tab.is-active {
+    color: #fff;
+    font-weight: 600;
+}
+
+.youtube__tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+}
+
+.youtube__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 14px 12px 24px;
+}
+
+.youtube__thumb {
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    background: var(--g);
+    position: relative;
+    overflow: hidden;
+}
+
+.youtube__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.youtube__play svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.youtube__card:hover .youtube__play,
+.youtube__card:focus .youtube__play {
+    opacity: 1;
+}
+
+.youtube__dur {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    background: rgba(0, 0, 0, 0.82);
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.youtube__info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+}
+
+.youtube__title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.youtube__meta {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 2px;
+}
+
+.youtube__player {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(6%);
+    transition: opacity 0.3s var(--android-ease), transform 0.3s var(--android-ease);
+}
+
+.youtube__player.is-open {
+    opacity: 1;
+    transform: none;
+}
+
+.youtube__player-close {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 8px);
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.youtube__player-close svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+}
+
+.youtube__stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--g);
+    position: relative;
+}
+
+.youtube__bigplay {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.youtube__bigplay svg {
+    width: 38px;
+    height: 38px;
+    fill: #fff;
+}
+
+.youtube__player-info {
+    padding: 12px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #fff;
+}
+
+.youtube__player-title {
+    font-size: 14px;
+}
+
+.youtube__player-meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.youtube__controls {
+    padding: 0 16px 20px;
+}
+
+.youtube__bar {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+.youtube__bar span {
+    display: block;
+    height: 100%;
+    width: 34%;
+    background: #ff0033;
+    border-radius: 2px;
+}
+
+/* ============================================================
+   Contacts
+   ============================================================ */
+
+.contacts__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 16px 22px;
+    text-align: center;
+    background: linear-gradient(180deg, #eaf4ff, transparent);
+}
+
+.contacts__hero h1 {
+    font-size: 21px;
+    margin: 12px 0 2px;
+}
+
+.contacts__hero p {
+    font-size: 14px;
+    color: rgba(17, 17, 20, 0.6);
+}
+
+.contacts__actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+/* ============================================================
+   WhatsApp
+   ============================================================ */
+
+.whatsapp__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 12px;
+    padding: 9px 14px;
+    background: #f0f2f5;
+    border-radius: 22px;
+    color: #667;
+}
+
+.whatsapp__search svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.whatsapp__search input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 14px;
+    color: inherit;
+}
+
+.whatsapp__chats {
+    list-style: none;
+}
+
+.whatsapp__chat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+}
+
+.whatsapp__chat .android-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 17px;
+}
+
+.whatsapp__who {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.whatsapp__who strong {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.whatsapp__who span {
+    font-size: 13px;
+    color: rgba(17, 17, 20, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.whatsapp__time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex: 0 0 auto;
+}
+
+.whatsapp__time time {
+    font-size: 11px;
+    color: rgba(17, 17, 20, 0.55);
+}
+
+.whatsapp__badge {
+    background: #25d366;
+    color: #fff;
+    font-size: 11px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+}
+
+.whatsapp__thread {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(239, 234, 226, 0.92), rgba(239, 234, 226, 0.92)), repeating-linear-gradient(45deg, #dfd8cf 0 2px, transparent 2px 12px);
+}
+
+.whatsapp__msgs {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.whatsapp__msg {
+    display: flex;
+}
+
+.whatsapp__msg.is-me {
+    justify-content: flex-end;
+}
+
+.whatsapp__bubble {
+    max-width: 78%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: #fff;
+    font-size: 14px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.whatsapp__bubble time {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.45);
+    margin-left: 8px;
+}
+
+.whatsapp__msg.is-me .whatsapp__bubble {
+    background: #d9fdd3;
+}
+
+.whatsapp__input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #f0f2f5;
+}
+
+.whatsapp__ico {
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    color: #667;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.whatsapp__ico svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.whatsapp__input input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    border-radius: 20px;
+    padding: 9px 14px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+}
+
+.whatsapp__send {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.whatsapp__send svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
+
+/* ============================================================
+   Chrome
+   ============================================================ */
+
+.chrome__topbar {
+    flex: 0 0 auto;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.chrome__tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef0f3;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.chrome__favicon svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.chrome__url {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef0f3;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #555;
+}
+
+.chrome__url svg {
+    width: 14px;
+    height: 14px;
+    fill: #70757a;
+    flex: 0 0 auto;
+}
+
+.chrome__url-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chrome__tools {
+    display: flex;
+}
+
+.chrome__page {
+    padding-bottom: 24px;
+}
+
+.chrome__hero {
+    background: linear-gradient(160deg, #eef2ff, #fdf2f8);
+    padding: 30px 20px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.chrome__hero h1 {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.chrome__hero p {
+    font-size: 14px;
+    color: rgba(17, 17, 20, 0.6);
+}
+
+.chrome__herobtns {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.chrome__section {
+    padding: 8px 16px 0;
+}
+
+.chrome__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chrome__card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f7f8fa;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 14px;
+    text-align: left;
+    width: 100%;
+    color: #111;
+}
+
+.chrome__card-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.chrome__card-ico svg {
+    width: 22px;
+    height: 22px;
+}
+
+.chrome__card div {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chrome__card strong {
+    font-size: 14px;
+}
+
+.chrome__card span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.chrome__card > svg {
+    width: 18px;
+    height: 18px;
+    fill: #9ca3af;
+}
+
+.chrome__foot {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+    padding: 18px 16px 0;
+}
+
+/* ============================================================
+   Gmail
+   ============================================================ */
+
+.gmail__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+}
+
+.gmail__tabs {
+    display: flex;
+    padding: 0 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.gmail__tab {
+    border: none;
+    background: none;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #5f6368;
+    position: relative;
+}
+
+.gmail__tab.is-active {
+    color: #d93025;
+    font-weight: 600;
+}
+
+.gmail__tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 0;
+    height: 2px;
+    background: #d93025;
+}
+
+.gmail__list {
+    list-style: none;
+}
+
+.gmail__row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.gmail__sender {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--g);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex: 0 0 auto;
+}
+
+.gmail__sender--lg {
+    width: 48px;
+    height: 48px;
+    font-size: 19px;
+}
+
+.gmail__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.gmail__line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.gmail__line strong {
+    font-size: 14px;
+}
+
+.gmail__line time {
+    font-size: 11px;
+    color: #5f6368;
+    flex: 0 0 auto;
+}
+
+.gmail__subject {
+    font-size: 14px;
+    color: #202124;
+}
+
+.gmail__snippet {
+    font-size: 13px;
+    color: #5f6368;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gmail__detail {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: #fff;
+    padding: 8px 16px 24px;
+    overflow-y: auto;
+}
+
+.gmail__detail-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.gmail__detail-head div {
+    display: flex;
+    flex-direction: column;
+}
+
+.gmail__detail-head div span {
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.gmail__detail-subject {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.gmail__detail-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #202124;
+}
+
+.gmail__compose {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.28s var(--android-ease);
+}
+
+.gmail__compose.is-open {
+    transform: none;
+}
+
+.gmail__compose-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.gmail__compose-head strong {
+    font-size: 15px;
+}
+
+.gmail__field {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 0 16px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+    font-size: 15px;
+    outline: none;
+}
+
+.gmail__field--area {
+    flex: 1;
+    min-height: 140px;
+    resize: none;
+    line-height: 1.6;
+}
+
+.gmail__compose-foot {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+}
+
+/* ============================================================
+   Maps
+   ============================================================ */
+
+.maps__canvas {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.maps__terrain {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 24% 32%, rgba(120, 180, 120, 0.55) 0 14%, transparent 14%),
+        radial-gradient(ellipse at 78% 68%, rgba(130, 170, 150, 0.5) 0 18%, transparent 18%),
+        linear-gradient(165deg, #dfe9de, #e2ecea 55%, #dce6e4);
+}
+
+.maps__roads {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.maps__road {
+    stroke: #fff;
+    stroke-width: 8;
+    fill: none;
+    stroke-linecap: round;
+    opacity: 0.95;
+}
+
+.maps__road--a {
+    stroke: #ffe9c9;
+    stroke-width: 9;
+}
+
+.maps__blk {
+    fill: #c6d3d6;
+}
+
+.maps__pin {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%, -100%);
+    z-index: 3;
+}
+
+.maps__pin-pulse {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: rgba(234, 67, 53, 0.35);
+    animation: maps-pulse 2.2s ease-out infinite;
+}
+
+.maps__pin-dot {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: #ea4335;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.maps__search {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 12px);
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    color: #5f6368;
+    font-size: 14px;
+    z-index: 4;
+}
+
+.maps__search svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.maps__card {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: calc(var(--android-navbar-h) + 16px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 12px 14px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+    z-index: 4;
+}
+
+.maps__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.maps__info strong {
+    font-size: 15px;
+}
+
+.maps__info span {
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.maps__fab {
+    right: 16px;
+    bottom: calc(var(--android-navbar-h) + 120px);
+    background: #fff;
+    color: #ea4335;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================================
+   Instagram
+   ============================================================ */
+
+.insta__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 6px;
+}
+
+.insta__head strong {
+    font-size: 15px;
+}
+
+.insta__stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 20px 0;
+}
+
+.insta__ring {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(#f58529, #dd2a7b, #8134af, #f58529);
+    display: block;
+    flex: 0 0 auto;
+}
+
+.insta__ring .android-avatar {
+    width: 78px;
+    height: 78px;
+    font-size: 30px;
+}
+
+.insta__nums {
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+    text-align: center;
+}
+
+.insta__nums div {
+    display: flex;
+    flex-direction: column;
+}
+
+.insta__nums strong {
+    font-size: 16px;
+}
+
+.insta__nums span {
+    font-size: 12px;
+    color: rgba(17, 17, 20, 0.6);
+}
+
+.insta__bio {
+    padding: 12px 20px 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.insta__bio strong {
+    font-size: 14px;
+}
+
+.insta__bio span {
+    font-size: 13px;
+}
+
+.insta__actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px 6px;
+}
+
+.insta__edit {
+    flex: 1;
+    background: #eff0f2;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+}
+
+.insta__stories {
+    display: flex;
+    gap: 14px;
+    padding: 12px 16px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.insta__stories::-webkit-scrollbar {
+    display: none;
+}
+
+.insta__story {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+}
+
+.insta__story-ring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
+    display: block;
+}
+
+.insta__story-ring .android-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 17px;
+}
+
+.insta__story em {
+    font-style: normal;
+    font-size: 11px;
+    color: #262626;
+}
+
+.insta__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 10px 0 6px;
+}
+
+.insta__tile {
+    aspect-ratio: 1;
+    background: var(--g);
+}
+
+.insta__viewer {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s var(--android-ease);
+}
+
+.insta__viewer.is-open {
+    transform: none;
+}
+
+.insta__viewer-stage {
+    flex: 1;
+    background: var(--g);
+    background-size: cover;
+}
+
+.insta__viewer-close {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 10px);
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.insta__viewer-close svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
+
+.insta__viewer-actions {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px 20px;
+    background: #000;
+}
+
+.insta__viewer-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insta__viewer-btn svg {
+    width: 26px;
+    height: 26px;
+    fill: #fff;
+}
+
+.insta__viewer-btn.is-liked svg {
+    fill: #f91880;
+    animation: viewer-pop 0.3s var(--android-spring);
+}
+
+/* ============================================================
+   Facebook
+   ============================================================ */
+
+.fb__cover {
+    height: 130px;
+    background: linear-gradient(135deg, #0f6bd6, #6db3ff);
+}
+
+.fb__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 12px;
+}
+
+.fb__profile .android-avatar {
+    margin-top: -38px;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fb__profile h1 {
+    font-size: 20px;
+    margin-top: 8px;
+}
+
+.fb__profile p {
+    font-size: 13px;
+    color: #65676b;
+}
+
+.fb__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.fb__actions .android-btn {
+    padding: 9px 16px;
+}
+
+.fb__actions svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+}
+
+.fb__actions .android-btn--outline svg {
+    fill: currentColor;
+}
+
+.fb__feed {
+    padding: 6px 12px 24px;
+}
+
+.fb__post {
+    background: #fff;
+    border-radius: 12px;
+    margin-top: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.fb__post-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fb__post-head div {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.fb__post-head strong {
+    font-size: 14px;
+}
+
+.fb__post-head div span {
+    font-size: 11px;
+    color: #65676b;
+}
+
+.fb__post-text {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.fb__post-photo {
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    background: var(--g);
+}
+
+.fb__post-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #65676b;
+    padding: 8px 2px;
+    border-bottom: 1px solid #eef0f2;
+}
+
+.fb__post-actions {
+    display: flex;
+}
+
+.fb__post-actions button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: #65676b;
+    font-size: 13px;
+    padding: 10px;
+}
+
+.fb__post-actions svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.fb__post-actions .is-liked {
+    color: #1877f2;
+}
+
+/* ============================================================
+   Photos
+   ============================================================ */
+
+.photos__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+}
+
+.photos__memories {
+    display: flex;
+    gap: 10px;
+    padding: 8px 16px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.photos__memories::-webkit-scrollbar {
+    display: none;
+}
+
+.photos__memory {
+    flex: 0 0 120px;
+    height: 150px;
+    border-radius: 14px;
+    background: var(--g);
+}
+
+.photos__albums {
+    padding: 8px 16px 0;
+}
+
+.photos__album-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.photos__album {
+    display: flex;
+    flex-direction: column;
+}
+
+.photos__album-thumb {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    background: var(--g);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.photos__album-thumb svg {
+    width: 30px;
+    height: 30px;
+    fill: currentColor;
+}
+
+.photos__album strong {
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.photos__album span {
+    font-size: 11px;
+    color: #5f6368;
+}
+
+.photos__grid {
+    padding: 8px 16px 24px;
+}
+
+.photos__tile-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 8px;
+}
+
+.photos__tile {
+    aspect-ratio: 1;
+    background: var(--g);
+}
+
+/* ============================================================
+   Drive
+   ============================================================ */
+
+.drive__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+}
+
+.drive__summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 8px 16px 6px;
+    padding: 12px 14px;
+    background: #f5f6f8;
+    border-radius: 14px;
+}
+
+.drive__summary-chart {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(#188038 0 55%, #dadce0 55% 100%);
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.drive__summary-chart::after {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border-radius: 50%;
+    background: #f5f6f8;
+}
+
+.drive__summary div {
+    display: flex;
+    flex-direction: column;
+}
+
+.drive__summary strong {
+    font-size: 14px;
+}
+
+.drive__summary span {
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.drive__list {
+    list-style: none;
+}
+
+.drive__file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.drive__file-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.drive__file-ico svg {
+    width: 24px;
+    height: 24px;
+}
+
+.drive__file-ico--pdf {
+    background: none;
+}
+
+.drive__file-ico--folder {
+    background: #fef7e0;
+    color: #f9ab00;
+}
+
+.drive__file-ico--folder svg {
+    fill: currentColor;
+}
+
+.drive__file-ico--doc {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.drive__file-ico--doc svg {
+    fill: currentColor;
+}
+
+.drive__file-ico--fig {
+    background: #fdeef4;
+    color: #e4456f;
+}
+
+.drive__file-ico--fig svg {
+    fill: currentColor;
+}
+
+.drive__file-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.drive__file-body strong {
+    font-size: 14px;
+}
+
+.drive__file-body span {
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.drive__preview {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s var(--android-ease);
+}
+
+.drive__preview.is-open {
+    transform: none;
+}
+
+.drive__preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drive__preview-bar > span {
+    flex: 1;
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drive__page {
+    flex: 1;
+    margin: 14px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    padding: 22px 20px;
+    overflow-y: auto;
+}
+
+.drive__page-head {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.drive__page-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #818cf8, #ec4899);
+    flex: 0 0 auto;
+}
+
+.drive__page-head div {
+    display: flex;
+    flex-direction: column;
+}
+
+.drive__page-head span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.drive__page-line {
+    height: 9px;
+    border-radius: 5px;
+    background: #e5e7eb;
+    margin: 10px 0;
+}
+
+.drive__page-line--w40 { width: 40%; }
+.drive__page-line--w70 { width: 70%; }
+.drive__page-line--w55 { width: 55%; }
+.drive__page-line--w35 { width: 35%; }
+.drive__page-line--w60 { width: 60%; }
+.drive__page-line--w45 { width: 45%; }
+.drive__page-line--w50 { width: 50%; }
+.drive__page-line--w65 { width: 65%; }
+
+.drive__page-sep {
+    height: 1px;
+    background: #f3f4f6;
+    margin: 18px 0;
+}
+
+/* ============================================================
+   Play Store
+   ============================================================ */
+
+.store__chips {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.store__chips::-webkit-scrollbar {
+    display: none;
+}
+
+.store__chip {
+    flex: 0 0 auto;
+    border: none;
+    background: #eef1f4;
+    border-radius: 18px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #202124;
+}
+
+.store__chip.is-active {
+    background: #1a73e8;
+    color: #fff;
+}
+
+.store__grid {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 16px 24px;
+}
+
+.store__app {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.store__app:last-child {
+    border-bottom: none;
+}
+
+.store__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--g);
+    color: #fff;
+    font-weight: 700;
+    font-size: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+}
+
+.store__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.store__info strong {
+    font-size: 15px;
+}
+
+.store__info span {
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.store__install {
+    border: none;
+    border-radius: 18px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #01875f;
+    background: #e9f7f0;
+    min-width: 84px;
+}
+
+.store__install.is-installed {
+    color: #1a73e8;
+    background: #e8f0fe;
+}
+
+/* ============================================================
+   Google
+   ============================================================ */
+
+.google__logo {
+    display: flex;
+    justify-content: center;
+    padding: 26px 0 18px;
+}
+
+.google__g svg {
+    width: 74px;
+    height: 74px;
+    display: block;
+}
+
+.google__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 18px;
+    background: #fff;
+    border-radius: 26px;
+    padding: 4px 10px 4px 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    color: #5f6368;
+}
+
+.google__search svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex: 0 0 auto;
+}
+
+.google__search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    padding: 11px 0;
+    background: none;
+    color: inherit;
+}
+
+.google__chips {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px 4px;
+}
+
+.google__chip {
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: #5f6368;
+    padding: 6px 12px;
+    position: relative;
+}
+
+.google__chip.is-active {
+    color: #1a73e8;
+}
+
+.google__chip.is-active::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 2px;
+    background: #1a73e8;
+}
+
+.google__about {
+    margin: 4px 16px 0;
+    background: #f7f8fa;
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.google__about p {
+    font-size: 13px;
+    color: #3c4043;
+    margin: 8px 0 0;
+    line-height: 1.55;
+}
+
+.google__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.google__facts span {
+    background: #fff;
+    border: 1px solid #e2e5ea;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #3c4043;
+}
+
+.google__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 8px;
+    padding: 8px 16px 24px;
+}
+
+.google__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    color: #202124;
+    font-size: 12px;
+}
+
+.google__link-ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #f1f3f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google__link-ico svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ============================================================
+   ChatGPT
+   ============================================================ */
+
+.chatgpt__msgs {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: radial-gradient(circle at 18% -8%, rgba(16, 163, 127, 0.1), transparent 46%);
+}
+
+.chatgpt__msg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.chatgpt__msg.is-user {
+    justify-content: flex-end;
+}
+
+.chatgpt__avatar {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+}
+
+.chatgpt__avatar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.chatgpt__bubble {
+    max-width: 78%;
+    background: #1f1f24;
+    border-radius: 16px;
+    border-top-left-radius: 4px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #e9eaec;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.chatgpt__msg.is-user .chatgpt__bubble {
+    background: #2f6d5f;
+    border-radius: 16px;
+    border-top-right-radius: 4px;
+}
+
+.chatgpt__input {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #16161a;
+}
+
+.chatgpt__input input {
+    flex: 1;
+    min-width: 0;
+    background: #1f1f24;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #e9eaec;
+    outline: none;
+}
+
+.chatgpt__send {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #10a37f;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.chatgpt__send svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
+
+.chatgpt__typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 14px 12px;
+}
+
+.chatgpt__typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #9ca3af;
+    animation: chatgpt-blink 1.2s infinite;
+}
+
+.chatgpt__typing span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.chatgpt__typing span:nth-child(3) {
+    animation-delay: 0.3s;
+}

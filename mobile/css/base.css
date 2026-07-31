@@ -1,0 +1,422 @@
+/* ============================================================
+ * Base CSS - device frame, status bar, nav bar, shade, toast
+ * All selectors are namespaced under #android-root / .android-*
+ * ============================================================ */
+
+#android-root {
+    --android-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --android-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --android-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
+
+    --android-statusbar-h: 30px;
+    --android-navbar-h: 50px;
+
+    --android-bg: #0b0b0d;
+    --android-surface: #16161a;
+    --android-text: #e9eaec;
+    --android-text-dim: rgba(235, 238, 245, 0.72);
+    --android-divider: rgba(255, 255, 255, 0.08);
+    --android-ripple-color: rgba(255, 255, 255, 0.65);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--android-bg);
+    font-family: var(--android-font);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--android-text);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* The phone screen fills the frame; content is layered inside. */
+.android-screen {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+/* Centered phone frame with thin bezel on larger/mid-size viewports. */
+@media (min-width: 560px) and (min-height: 780px) {
+    #android-root {
+        padding: 30px;
+    }
+    .android-screen {
+        border-radius: 44px;
+        border: 8px solid #1c1c20;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+}
+
+#android-root input,
+#android-root textarea,
+#android-root button,
+#android-root select {
+    font-family: var(--android-font);
+}
+
+#android-root input,
+#android-root textarea {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+#android-root button {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+}
+
+#android-root button:focus-visible,
+#android-root [tabindex]:focus-visible,
+#android-root input:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: -2px;
+}
+
+/* ------------------------------------------------------------
+   Ripple
+   ------------------------------------------------------------ */
+
+.android-ripple-target {
+    position: relative;
+    overflow: hidden;
+}
+
+.android-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--android-ripple-color);
+    opacity: 0.25;
+    transform: scale(0);
+    animation: android-ripple 0.55s ease-out forwards;
+    pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   Wallpaper
+   ------------------------------------------------------------ */
+
+.android-wallpaper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.android-wallpaper__img {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+
+.android-wallpaper__img.is-active {
+    opacity: 1;
+}
+
+.android-screen.is-dark .android-wallpaper__img {
+    filter: brightness(0.65) saturate(1.1);
+}
+
+/* ------------------------------------------------------------
+   Status bar
+   ------------------------------------------------------------ */
+
+.android-statusbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--android-statusbar-h);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 16px 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.android-statusbar__side {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 100%;
+}
+
+.android-statusbar__side svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    display: block;
+}
+
+.android-statusbar__battery svg {
+    width: 20px;
+    height: 20px;
+}
+
+.android-statusbar__time {
+    min-width: 40px;
+}
+
+.android-statusbar__notif svg {
+    width: 9px;
+    height: 9px;
+    fill: #ffd166;
+}
+
+/* Centered punch-hole camera */
+.android-punch {
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #2a2a30, #050506 70%);
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.25);
+    z-index: 70;
+}
+
+/* ------------------------------------------------------------
+   Navigation bar (3-button)
+   ------------------------------------------------------------ */
+
+.android-navbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--android-navbar-h);
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.12));
+}
+
+.android-nav-btn {
+    width: 56px;
+    height: 46px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+}
+
+.android-nav-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.android-nav-btn:active {
+    transform: scale(0.88);
+}
+
+/* ------------------------------------------------------------
+   Quick-settings shade
+   ------------------------------------------------------------ */
+
+.android-shade {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    padding: calc(var(--android-statusbar-h) + 22px) 22px 24px;
+    background: linear-gradient(180deg, rgba(9, 9, 13, 0.72), rgba(12, 12, 16, 0.94));
+    -webkit-backdrop-filter: blur(28px);
+    backdrop-filter: blur(28px);
+    color: #fff;
+    transform: translateY(-102%);
+    transition: transform 0.36s var(--android-ease);
+    overflow-y: auto;
+}
+
+.android-shade.is-open {
+    transform: translateY(0);
+}
+
+.android-shade__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.android-shade__time {
+    font-size: 34px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+}
+
+.android-shade__date {
+    font-size: 13px;
+    color: var(--android-text-dim);
+    margin-top: 2px;
+}
+
+.android-shade__edit {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.android-shade__edit svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.android-shade__toggles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.android-toggle {
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 14px 6px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    font-size: 12px;
+    transition: background 0.2s var(--android-ease), transform 0.1s;
+}
+
+.android-toggle svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.android-toggle.is-on {
+    background: #1a73e8;
+    border-color: transparent;
+}
+
+.android-toggle:active {
+    transform: scale(0.94);
+}
+
+.android-shade__bright {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 6px 4px;
+}
+
+.android-shade__bright span svg {
+    width: 20px;
+    height: 20px;
+    fill: rgba(255, 255, 255, 0.9);
+    display: block;
+}
+
+.android-shade__bright input[type='range'] {
+    flex: 1;
+    accent-color: #fff;
+    height: 24px;
+}
+
+.android-shade__notifs {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.android-notif {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 18px;
+    padding: 13px 16px;
+}
+
+.android-notif svg {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+}
+
+.android-notif__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.android-notif__body strong {
+    font-size: 14px;
+}
+
+.android-notif__body span {
+    font-size: 13px;
+    color: var(--android-text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ------------------------------------------------------------
+   Toast / snackbar
+   ------------------------------------------------------------ */
+
+.android-toast {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--android-navbar-h) + 22px);
+    transform: translate(-50%, 18px);
+    z-index: 90;
+    max-width: 82%;
+    background: #35343a;
+    color: #fff;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s var(--android-ease), transform 0.28s var(--android-ease);
+}
+
+.android-toast--in {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.android-toast--out {
+    opacity: 0;
+    transform: translate(-50%, 18px);
+}

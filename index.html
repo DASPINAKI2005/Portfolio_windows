@@ -129,5 +129,26 @@
     </template>
 
     <script src="script.js"></script>
+
+    <!-- ============================================================
+         MOBILE EXPERIENCE (Android simulation)
+         Entirely separate layer from the desktop build above.
+         Desktop markup/scripts/styles above are untouched.
+         ============================================================ -->
+    <link rel="stylesheet" href="mobile/css/gate.css">
+    <link rel="stylesheet" href="mobile/css/base.css">
+    <link rel="stylesheet" href="mobile/css/home.css">
+    <link rel="stylesheet" href="mobile/css/app.css">
+    <link rel="stylesheet" href="mobile/css/recents.css">
+    <link rel="stylesheet" href="mobile/css/animations.css">
+    <div id="android-root"></div>
+    <script src="mobile/js/core.js"></script>
+    <script src="mobile/js/icons.js"></script>
+    <script src="mobile/js/apps.js"></script>
+    <script src="mobile/js/shell.js"></script>
+    <script src="mobile/js/home.js"></script>
+    <script src="mobile/js/app-manager.js"></script>
+    <script src="mobile/js/recents.js"></script>
+    <script src="mobile/js/android.js"></script>
 </body>
 </html>

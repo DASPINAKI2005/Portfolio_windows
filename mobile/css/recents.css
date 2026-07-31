@@ -1,0 +1,144 @@
+/* ============================================================
+ * Recents / Overview CSS - stacked app cards, swipe to dismiss
+ * All selectors are namespaced under #android-root / .android-*
+ * ============================================================ */
+
+.android-recents {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(6, 6, 8, 0.6);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    transition: opacity 0.24s var(--android-ease), visibility 0.24s;
+}
+
+.android-recents.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+}
+
+.android-recents__head {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 8px);
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--android-text);
+    pointer-events: none;
+}
+
+.android-recents__list {
+    position: absolute;
+    inset: calc(var(--android-statusbar-h) + 52px) 0 calc(var(--android-navbar-h) + 14px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.android-recents__card {
+    position: relative;
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 11;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 20px;
+    background: var(--g, #26262c);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.android-recents.is-open .android-recents__card {
+    animation: android-recents-card-in 0.36s var(--android-spring) both;
+}
+
+.android-recents.is-open .android-recents__card:nth-child(1) { animation-delay: 0.02s; }
+.android-recents.is-open .android-recents__card:nth-child(2) { animation-delay: 0.06s; }
+.android-recents.is-open .android-recents__card:nth-child(3) { animation-delay: 0.1s; }
+.android-recents.is-open .android-recents__card:nth-child(4) { animation-delay: 0.14s; }
+.android-recents.is-open .android-recents__card:nth-child(5) { animation-delay: 0.18s; }
+.android-recents.is-open .android-recents__card:nth-child(6) { animation-delay: 0.22s; }
+.android-recents.is-open .android-recents__card:nth-child(n + 7) { animation-delay: 0.26s; }
+
+.android-recents__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.55) 78%);
+}
+
+.android-recents__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+}
+
+.android-recents__close svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.android-recents__info {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+}
+
+.android-recents__icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.android-recents__icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.android-recents__info strong {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

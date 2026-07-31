@@ -1,0 +1,185 @@
+/* ============================================================
+ * Home screen - search pill, paged app grid, indicators, dock
+ * ============================================================ */
+
+.android-home {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(var(--android-statusbar-h) + 14px);
+}
+
+/* --- Google search pill --- */
+
+.android-home__search {
+    margin: 0 18px 10px;
+    height: 48px;
+    border-radius: 26px;
+    background: rgba(26, 26, 32, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px 0 14px;
+    color: #fff;
+    flex: 0 0 auto;
+}
+
+.android-home__search-ico svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+
+.android-home__search-text {
+    flex: 1;
+    text-align: left;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.android-home__mic {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.android-home__mic svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+}
+
+/* --- Paged app grid --- */
+
+.android-home__pages {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.android-home__pages::-webkit-scrollbar {
+    display: none;
+}
+
+.android-home__page {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(92px, auto);
+    align-content: start;
+    gap: 6px 2px;
+    padding: 8px 8px 4px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* App icon cell */
+.android-app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 10px 4px 6px;
+    background: none;
+    border: none;
+    border-radius: 18px;
+    color: #fff;
+    min-width: 0;
+}
+
+.android-app-icon__glyph {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+}
+
+.android-app-icon__glyph svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.android-app-icon__label {
+    font-size: 12px;
+    line-height: 1.15;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* --- Page indicators --- */
+
+.android-home__indicators {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 2px 0 8px;
+    flex: 0 0 auto;
+}
+
+.android-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    transition: transform 0.25s var(--android-ease), background 0.25s;
+}
+
+.android-dot.is-active {
+    background: #fff;
+    transform: scale(1.3);
+}
+
+/* --- Dock --- */
+
+.android-home__dock {
+    flex: 0 0 auto;
+    margin: 0 16px 12px;
+    padding: 9px 6px 7px;
+    background: rgba(24, 24, 30, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    -webkit-backdrop-filter: blur(26px);
+    backdrop-filter: blur(26px);
+    border-radius: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.android-home__dock .android-app-icon__glyph {
+    width: 50px;
+    height: 50px;
+}
+
+/* Wider viewports get more columns (tablet-sized emulation). */
+@media (min-width: 500px) {
+    .android-home__page {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 800px) {
+    .android-home__page {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}

@@ -1,0 +1,39 @@
+/* ============================================================
+ * Gate CSS
+ * Switches the view between the existing desktop build and the
+ * Android simulation. This is the ONLY file that touches desktop
+ * elements, and it does so with display:none inside a media query.
+ *
+ *   Desktop  >= 1025px  -> Windows portfolio (unchanged)
+ *   Mobile   <= 1024px  -> Android simulation
+ * ============================================================ */
+
+#android-root {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    /* Hide the desktop simulation entirely on mobile screens. */
+    body {
+        background-color: #000;
+    }
+    #desktop,
+    #taskbar,
+    #start-menu,
+    #context-menu,
+    #selection-box,
+    .wallpaper-layer {
+        display: none !important;
+    }
+
+    /* Show the Android simulation. */
+    #android-root {
+        display: block;
+    }
+}
+
+@media (min-width: 1025px) {
+    #android-root {
+        display: none !important;
+    }
+}
