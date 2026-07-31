@@ -6,6 +6,16 @@
  *
  *   Desktop  >= 1025px  -> Windows portfolio (unchanged)
  *   Mobile   <= 1024px  -> Android simulation
+ *
+ * Wallpaper behavior (single 1024px breakpoint, synced with the
+ * phone simulation):
+ *   - The desktop wallpaper (body background) is the page backdrop
+ *     on Desktop AND Tablet sizes; it does not switch when the
+ *     viewport enters the tablet / phone-frame range.
+ *   - The Android wallpaper only renders inside the phone screen,
+ *     so it only appears once the mobile phone layout is active.
+ *   - The sim backdrop stays transparent, so the exact same desktop
+ *     wallpaper continues to show through seamlessly (no reload).
  * ============================================================ */
 
 #android-root {
@@ -15,6 +25,8 @@
 @media (max-width: 1024px) {
     /* Hide the desktop simulation entirely on mobile screens. */
     body {
+        /* Fallback color only; the desktop wallpaper image above
+           remains the backdrop and keeps showing through. */
         background-color: #000;
     }
     #desktop,
@@ -26,9 +38,13 @@
         display: none !important;
     }
 
-    /* Show the Android simulation. */
+    /* Show the Android simulation. The backdrop stays transparent so
+       the desktop wallpaper remains visible around the phone frame on
+       tablet screens; the Android wallpaper renders only inside the
+       phone screen (opaque .android-screen). */
     #android-root {
         display: block;
+        background: transparent !important;
     }
 }
 
