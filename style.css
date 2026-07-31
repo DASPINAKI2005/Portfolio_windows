@@ -279,8 +279,8 @@ body {
     bottom: calc(var(--taskbar-height) + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    width: 640px;
-    height: 720px;
+    width: 560px;
+    height: 600px;
     border-radius: 8px;
     padding: 24px;
     display: flex;
@@ -304,7 +304,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 8px 16px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     border-bottom: 2px solid var(--accent);
 }
 
@@ -331,7 +331,10 @@ body {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 16px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .pinned-app {
@@ -358,6 +361,9 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     flex-grow: 1;
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .rec-item {
