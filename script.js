@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ClockManager.init();
     ContextMenuManager.init();
     StartMenuManager.init();
+    WidgetsManager.init();
     SelectionManager.init();
 });
 
@@ -788,6 +789,22 @@ const TaskbarManager = {
             StartMenuManager.toggle();
         });
 
+        // Taskbar search reuses the Start Menu search panel & engine.
+        el('search-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (StartMenuManager.isOpen) {
+                StartMenuManager.hide();
+            } else {
+                StartMenuManager.show();
+                const input = StartMenuManager.menuEl.querySelector('.start-search input');
+                if (input) input.focus();
+            }
+        });
+
+        el('widgets-btn').addEventListener('click', () => {
+            WidgetsManager.toggle();
+        });
+
         el('show-desktop').addEventListener('click', () => {
             STATE.windows.forEach((winEl, appId) => {
                 WindowManager.minimize(winEl.id);
@@ -940,8 +957,10 @@ const StartMenuManager = {
     },
 
     show() {
+        this.menuEl.hidden = false;
         this.menuEl.classList.remove('hidden');
         this.isOpen = true;
+        WidgetsManager.hide();
         ContextMenuManager.hide();
     },
 
@@ -951,6 +970,41 @@ const StartMenuManager = {
         const input = this.menuEl.querySelector('.start-search input');
         if (input && input.value) input.value = '';
         this.setSearchMode(false);
+    }
+};
+
+// --- Widgets Panel ---
+const WidgetsManager = {
+    panelEl: null,
+    isOpen: false,
+
+    init() {
+        this.panelEl = el('widgets-panel');
+
+        document.addEventListener('click', (e) => {
+            if (this.isOpen && !this.panelEl.contains(e.target) && !el('widgets-btn').contains(e.target)) {
+                this.hide();
+            }
+        });
+    },
+
+    toggle() {
+        if (this.isOpen) this.hide();
+        else this.show();
+    },
+
+    show() {
+        if (!this.panelEl) return;
+        StartMenuManager.hide();
+        this.panelEl.hidden = false;
+        this.panelEl.classList.remove('hidden');
+        this.isOpen = true;
+    },
+
+    hide() {
+        if (!this.panelEl) return;
+        this.panelEl.classList.add('hidden');
+        this.isOpen = false;
     }
 };
 

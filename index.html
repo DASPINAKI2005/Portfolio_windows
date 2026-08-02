@@ -18,7 +18,24 @@
     <link rel="icon" type="image/png" href="assets/icons/this-pc.png">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+    <body>
+    <!-- ============================================================
+         WELCOME OVERLAY (new section)
+         Premium glassmorphism welcome screen. Fullscreen, fixed, and
+         z-index 100000 so it sits above every layer (desktop taskbar
+         z:10000, context menu z:10001, Android sim layers z<=90).
+         The title copy is injected by welcome-overlay.js based on
+         viewport width (768px breakpoint); this markup is untouched
+         by the Windows / Android simulations.
+         ============================================================ -->
+    <div id="welcome-overlay" role="presentation" aria-hidden="true">
+        <div class="welcome-card">
+            <div class="welcome-card__glow"></div>
+            <h1 class="welcome-title" id="welcome-title"></h1>
+            <p class="welcome-subtitle">Designed &amp; Developed by Pinaki Das</p>
+        </div>
+    </div>
+
     <!-- Main Desktop Area -->
     <main id="desktop" tabindex="-1">
         <div id="selection-box" hidden></div>
@@ -41,7 +58,7 @@
     </div>
 
     <!-- Start Menu -->
-    <div id="start-menu" class="acrylic-panel" hidden>
+    <div id="start-menu" class="acrylic-panel hidden" hidden>
         <div class="start-search">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <input type="text" placeholder="Search for apps, settings, and documents">
@@ -79,6 +96,24 @@
         </div>
     </div>
 
+    <!-- Widgets Panel -->
+    <div id="widgets-panel" class="acrylic-panel hidden" hidden>
+        <div class="widgets-title">Widgets</div>
+        <div class="widget-card">
+            <div class="widget-card-head">
+                <span>Weather</span>
+                <span class="widget-card-temp">72°F</span>
+            </div>
+            <div class="widget-card-sub">Sunny</div>
+        </div>
+        <div class="widget-card">
+            <div class="widget-card-head">
+                <span>Welcome</span>
+            </div>
+            <div class="widget-card-sub">Pinaki Das · Aspiring AI Engineer</div>
+        </div>
+    </div>
+
     <!-- Taskbar -->
     <footer id="taskbar">
         <div class="taskbar-left">
@@ -95,10 +130,10 @@
             <button class="taskbar-btn" id="start-btn" aria-label="Start">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="#0078D4"><path d="M11.4 11.4H2.4V2.4h9v9zm10.2 0h-9V2.4h9v9zm-10.2 10.2H2.4v-9h9v9zm10.2 0h-9v-9h9v9z"/></svg>
             </button>
-            <button class="taskbar-btn" aria-label="Search">
+            <button class="taskbar-btn" id="search-btn" aria-label="Search">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </button>
-            <button class="taskbar-btn" aria-label="Task View">
+            <button class="taskbar-btn" id="widgets-btn" aria-label="Widgets">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M4 4h7v16H4V4zm9 0h7v7h-7V4zm0 9h7v7h-7v-7z"/></svg>
             </button>
             <!-- Open app icons injected here -->
@@ -163,5 +198,8 @@
     <script src="mobile/js/app-manager.js"></script>
     <script src="mobile/js/recents.js"></script>
     <script src="mobile/js/android.js"></script>
+
+    <!-- Welcome overlay logic (new) - self-contained, loads last -->
+    <script src="welcome-overlay.js"></script>
 </body>
 </html>
