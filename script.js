@@ -12,6 +12,9 @@ const Icons = {
     pdf: 'assets/icons/resume.png'
 };
 
+// --- Uploaded documents (resume + certificates) ---
+const RESUME_FILE = 'assets/resume/Pinaki_Das_CV.pdf';
+
 // --- App Config & State ---
 const CONFIG = {
     gridX: 84,
@@ -28,7 +31,7 @@ const STATE = {
         { id: 'network', title: 'Network', type: 'explorer', icon: Icons.network, initialX: 0, initialY: 1 },
         { id: 'recycle', title: 'Recycle Bin', type: 'explorer', icon: Icons.trash, initialX: 0, initialY: 2 },
         { id: 'cert', title: 'Certificate', type: 'folder', icon: Icons.folder, initialX: 0, initialY: 3 },
-        { id: 'resume', title: 'Resume.pdf', type: 'pdf', icon: Icons.pdf, initialX: 0, initialY: 4 }
+        { id: 'resume', title: 'Resume.pdf', type: 'pdf', icon: Icons.pdf, pdf: RESUME_FILE, initialX: 0, initialY: 4 }
     ]
 };
 
@@ -302,6 +305,25 @@ const WindowManager = {
         if(!this.container) {
             this.container = el('window-container');
             this.template = el('window-template');
+            this.container.addEventListener('click', (e) => {
+                const certItem = e.target.closest('[data-cert]');
+                if (certItem) {
+                    const cert = this.portfolioData().certs[parseInt(certItem.dataset.cert, 10)];
+                    if (cert && cert.pdf) {
+                        this.open({ id: 'cert-' + certItem.dataset.cert, title: cert.name, type: 'pdf', icon: Icons.folder, pdf: cert.pdf });
+                    }
+                    return;
+                }
+                const dl = e.target.closest('[data-pdf-download]');
+                if (dl && dl.dataset.pdfDownload) {
+                    const a = document.createElement('a');
+                    a.href = dl.dataset.pdfDownload;
+                    a.download = dl.dataset.pdfDownload.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                }
+            });
         }
     },
 
@@ -547,8 +569,8 @@ const WindowManager = {
         if (!certs.length) {
             return '<div style="color: var(--text-secondary); font-size: 13px;">This folder is empty.</div>';
         }
-        return certs.map((c) => `
-            <div class="explorer-item">
+        return certs.map((c, i) => `
+            <div class="explorer-item" data-cert="${i}" role="button" tabindex="0" style="cursor:pointer">
                 <div class="explorer-item-ico" style="--g:linear-gradient(135deg,${c.color1},${c.color2})">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
                 </div>
@@ -558,6 +580,19 @@ const WindowManager = {
     },
 
     renderPdfContent(appData) {
+        if (appData.pdf) {
+            return `
+            <div style="display:flex; flex-direction:column; height:100%;">
+                <div class="pdf-toolbar">
+                    <span>${esc(appData.title)}</span>
+                    <button class="pdf-btn" data-pdf-download="${esc(appData.pdf)}">Download</button>
+                </div>
+                <div class="pdf-content" style="display:block; overflow:hidden;">
+                    <iframe src="${esc(appData.pdf)}" title="${esc(appData.title)}" style="width:100%; height:100%; border:0; display:block; background:#fff;"></iframe>
+                </div>
+            </div>
+            `;
+        }
         const data = this.portfolioData();
         const profile = data.profile || {};
         const resume = data.resume || {};

@@ -55,11 +55,11 @@
     ];
 
     const CERTS = [
-        { name: 'Introduction to AI', org: 'Google · Coursera', color1: '#60a5fa', color2: '#818cf8' },
-        { name: 'Maximize Productivity with AI Tools', org: 'Google · Coursera', color1: '#fbbf24', color2: '#f59e0b' },
-        { name: 'AWS Power Hour: Generative AI for Developers', org: 'AWS', color1: '#34d399', color2: '#0ea5e9' },
-        { name: 'PyTorch & DL for Decision Makers (LFS116)', org: 'Linux Foundation', color1: '#f472b6', color2: '#fb923c' },
-        { name: 'Planning a Generative AI Project', org: 'AWS', color1: '#a78bfa', color2: '#ec4899' }
+        { name: 'Introduction to AI', org: 'Google · Coursera', color1: '#60a5fa', color2: '#818cf8', pdf: 'assets/certificates/coursera-introduction-to-ai.pdf' },
+        { name: 'Maximize Productivity with AI Tools', org: 'Google · Coursera', color1: '#fbbf24', color2: '#f59e0b', pdf: 'assets/certificates/coursera-maximize-productivity-ai-tools.pdf' },
+        { name: 'AWS Power Hour: Generative AI for Developers', org: 'AWS', color1: '#34d399', color2: '#0ea5e9', pdf: 'assets/certificates/aws-power-hour-generative-ai.pdf' },
+        { name: 'PyTorch & DL for Decision Makers (LFS116)', org: 'Linux Foundation', color1: '#f472b6', color2: '#fb923c', pdf: 'assets/certificates/linux-foundation-pytorch-lfs116.pdf' },
+        { name: 'Planning a Generative AI Project', org: 'AWS', color1: '#a78bfa', color2: '#ec4899', pdf: 'assets/certificates/aws-planning-generative-ai-project.pdf' }
     ];
 
     const EMAILS = [
@@ -101,7 +101,7 @@
     // TODO: Replace the simulated Resume.pdf preview with the real resume file
     //       (e.g. mobile/media/Resume.pdf) when it is ready.
     const DRIVE_FILES = [
-        { name: 'Resume.pdf', kind: 'pdf', meta: 'PDF · Updated today' },
+        { name: 'Resume.pdf', kind: 'pdf', meta: 'PDF · Updated today', src: 'assets/resume/Pinaki_Das_CV.pdf' },
         { name: 'Certificates', kind: 'folder', meta: 'Folder · 5 items' },
         { name: 'Projects', kind: 'folder', meta: 'Folder · 3 items' },
         { name: 'CoverLetter.docx', kind: 'doc', meta: 'DOCX · 45 KB' },
@@ -934,7 +934,12 @@
             if (!root) return;
             const idx = parseInt(target.dataset.idx, 10);
             const p = PHOTOS[idx];
-            root.querySelector('.insta__viewer-stage').style.setProperty('--g', p.grad);
+            const stage = root.querySelector('.insta__viewer-stage');
+            stage.style.setProperty('--g', p.grad);
+            const cert = idx < CERTS.length && CERTS[idx].pdf ? CERTS[idx] : null;
+            stage.innerHTML = cert
+                ? '<iframe src="' + esc(cert.pdf) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>'
+                : '';
             root.querySelector('.insta__viewer').hidden = false;
             setTimeout(function () {
                 root.querySelector('.insta__viewer').classList.add('is-open');
@@ -964,6 +969,10 @@
             if (f.kind !== 'pdf') {
                 showToast('Opening ' + f.name + '...');
                 return;
+            }
+            const page = root.querySelector('.drive__page');
+            if (f.src) {
+                page.innerHTML = '<iframe src="' + esc(f.src) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>';
             }
             root.querySelector('.drive__preview').hidden = false;
             setTimeout(function () {
@@ -1083,7 +1092,7 @@
         if (q.indexOf('project') > -1 || q.indexOf('work') > -1) return 'I have built 3 real-world projects - open YouTube to browse them, including Nova, an AI chatbot, and a real-time object detection web app.';
         if (q.indexOf('contact') > -1 || q.indexOf('email') > -1 || q.indexOf('reach') > -1) return 'You can reach me at ' + PROFILE.email + ' or open the Contacts app for every channel.';
         if (q.indexOf('hi') > -1 || q.indexOf('hello') > -1 || q.indexOf('hey') > -1) return 'Hey there! Ask me about skills, projects or ways to get in touch.';
-        if (q.indexOf('resume') > -1 || q.indexOf('cv') > -1) return 'Open the Drive app and tap Resume.pdf - it has a full simulated preview.';
+        if (q.indexOf('resume') > -1 || q.indexOf('cv') > -1) return 'Open the Drive app and tap Resume.pdf - it opens the full resume PDF.';
         return 'Good question! Try asking about skills, projects, or contact details - this assistant keeps its answers in the portfolio.';
     }
 
