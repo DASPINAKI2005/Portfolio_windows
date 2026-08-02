@@ -1108,7 +1108,8 @@
         data: {
             profile: PROFILE,
             certs: CERTS,
-            resume: RESUME
+            resume: RESUME,
+            projects: PROJECTS
         },
         all: APPS,
         byId: BY_ID,

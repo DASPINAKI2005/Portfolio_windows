@@ -388,6 +388,21 @@ body {
     color: var(--text-secondary);
 }
 
+/* Start Menu Search */
+.start-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.start-search-results.hidden,
+.start-section-title.hidden,
+.pinned-apps.hidden,
+.recommended-files.hidden {
+    display: none;
+}
+
 .start-footer {
     display: flex;
     justify-content: space-between;

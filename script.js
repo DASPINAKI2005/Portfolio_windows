@@ -27,16 +27,19 @@ const STATE = {
     windows: new Map(), // id -> DOM element
     activeWindowId: null,
     desktopIcons: [
-        { id: 'this-pc', title: 'This PC', type: 'explorer', icon: Icons.computer, initialX: 0, initialY: 0 },
-        { id: 'network', title: 'Network', type: 'explorer', icon: Icons.network, initialX: 0, initialY: 1 },
-        { id: 'recycle', title: 'Recycle Bin', type: 'explorer', icon: Icons.trash, initialX: 0, initialY: 2 },
-        { id: 'cert', title: 'Certificate', type: 'folder', icon: Icons.folder, initialX: 0, initialY: 3 },
-        { id: 'resume', title: 'Resume.pdf', type: 'pdf', icon: Icons.pdf, pdf: RESUME_FILE, initialX: 0, initialY: 4 }
+        { id: 'this-pc', title: 'This PC', type: 'explorer', icon: Icons.computer, initialX: 0, initialY: 0, keywords: 'my pc computer file explorer files folders' },
+        { id: 'network', title: 'Network', type: 'explorer', icon: Icons.network, initialX: 0, initialY: 1, keywords: 'links' },
+        { id: 'recycle', title: 'Recycle Bin', type: 'explorer', icon: Icons.trash, initialX: 0, initialY: 2, keywords: 'trash deleted' },
+        { id: 'cert', title: 'Certificate', type: 'folder', icon: Icons.folder, initialX: 0, initialY: 3, keywords: 'certificates courses coursera aws linux' },
+        { id: 'resume', title: 'Resume.pdf', type: 'pdf', icon: Icons.pdf, pdf: RESUME_FILE, initialX: 0, initialY: 4, keywords: 'cv resume download document' },
+        { id: 'projects', title: 'Projects', type: 'folder', icon: Icons.folder, pinnedOnly: true, keywords: 'nova ai chatbot object detection eighth wonder' },
+        { id: 'github', title: 'GitHub', type: 'explorer', icon: Icons.network, pinnedOnly: true, keywords: 'git profile repository' }
     ]
 };
 
 // --- Utilities ---
 const el = (id) => document.getElementById(id);
+const appById = (id) => STATE.desktopIcons.find((app) => app.id === id);
 const esc = (value) => {
     if (window.Android && Android.Utils && Android.Utils.esc) return Android.Utils.esc(value);
     return String(value == null ? '' : value)
@@ -133,6 +136,7 @@ const DesktopManager = {
     renderIcons() {
         this.container.innerHTML = '';
         STATE.desktopIcons.forEach(icon => {
+            if (icon.pinnedOnly) return;
             const div = document.createElement('div');
             div.className = 'desktop-icon';
             div.id = `icon-${icon.id}`;
@@ -308,10 +312,23 @@ const WindowManager = {
             this.container.addEventListener('click', (e) => {
                 const certItem = e.target.closest('[data-cert]');
                 if (certItem) {
-                    const cert = this.portfolioData().certs[parseInt(certItem.dataset.cert, 10)];
-                    if (cert && cert.pdf) {
-                        this.open({ id: 'cert-' + certItem.dataset.cert, title: cert.name, type: 'pdf', icon: Icons.folder, pdf: cert.pdf });
-                    }
+                    this.openCert(certItem.dataset.cert);
+                    return;
+                }
+                const navFolder = e.target.closest('[data-nav-folder]');
+                if (navFolder) {
+                    this.navigateFolder(navFolder.closest('.window'), navFolder.dataset.navFolder);
+                    return;
+                }
+                const navBack = e.target.closest('[data-nav-back]');
+                if (navBack) {
+                    this.navigateBack(navBack.closest('.window'));
+                    return;
+                }
+                const openApp = e.target.closest('[data-open-app]');
+                if (openApp) {
+                    const app = appById(openApp.dataset.openApp);
+                    if (app) this.open(app);
                     return;
                 }
                 const dl = e.target.closest('[data-pdf-download]');
@@ -358,6 +375,15 @@ const WindowManager = {
         const contentArea = winEl.querySelector('.window-content');
         if (appData.type === 'pdf') {
             contentArea.innerHTML = this.renderPdfContent(appData);
+        } else if (appData.id === 'this-pc') {
+            contentArea.innerHTML = this.renderMyPc(appData);
+            winEl._fsStack = ['root'];
+            const backBtn = winEl.querySelector('[data-nav-back]');
+            if (backBtn) backBtn.style.visibility = 'hidden';
+        } else if (appData.id === 'projects') {
+            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderFsItems(this.fsDirs.projects.items()));
+        } else if (appData.id === 'github') {
+            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderGitHubBody());
         } else if (appData.type === 'folder') {
             contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderCertGrid());
         } else {
@@ -540,14 +566,18 @@ const WindowManager = {
             : { profile: {}, certs: [], resume: {} };
     },
 
-    renderExplorerFrame(appData, bodyHtml) {
+    renderExplorerFrame(appData, bodyHtml, path, backable) {
+        const backArrow = backable
+            ? '<button data-nav-back aria-label="Back" style="background:transparent;border:none;color:inherit;padding:4px;border-radius:4px;cursor:pointer;display:flex;align-items:center;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z"/></svg></button>'
+            : '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>';
+        const currentPath = path || `C:\\Users\\Pinaki\\Desktop\\${esc(appData.title)}`;
         return `
             <div class="explorer-layout">
                 <div class="explorer-toolbar">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>
+                    ${backArrow}
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2l14 6-14 6V2z"/></svg>
-                    <div style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; flex-grow: 1; font-size: 13px;">
-                        C:\\Users\\Pinaki\\Desktop\\${esc(appData.title)}
+                    <div class="explorer-path" style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; flex-grow: 1; font-size: 13px;">
+                        ${currentPath}
                     </div>
                 </div>
                 <div class="explorer-body">
@@ -576,6 +606,122 @@ const WindowManager = {
                 </div>
                 <div class="explorer-item-name">${esc(c.name)}</div>
                 <div class="explorer-item-sub">${esc(c.org)}</div>
+            </div>`).join('');
+    },
+
+    /** Shared cert launcher — reuses the exact viewer opened from the desktop / file system. */
+    openCert(index) {
+        const cert = (this.portfolioData().certs || [])[parseInt(index, 10)];
+        if (cert && cert.pdf) {
+            this.open({ id: 'cert-' + index, title: cert.name, type: 'pdf', icon: Icons.folder, pdf: cert.pdf });
+        }
+    },
+
+    /** Virtual file system (This PC). Files reference the same shared app registry / data. */
+    fsDirs: {
+        root: {
+            path: 'This PC',
+            items() {
+                return [
+                    { kind: 'folder', nav: 'documents', title: 'Documents', icon: Icons.folder },
+                    { kind: 'folder', nav: 'certificates', title: 'Certificates', icon: Icons.folder },
+                    { kind: 'folder', nav: 'projects', title: 'Projects', icon: Icons.folder },
+                    { kind: 'app', appId: 'network', title: 'Network', icon: Icons.network },
+                    { kind: 'app', appId: 'recycle', title: 'Recycle Bin', icon: Icons.trash },
+                    { kind: 'app', appId: 'github', title: 'GitHub', icon: Icons.network }
+                ];
+            }
+        },
+        documents: {
+            path: 'This PC\\Documents',
+            items() {
+                return [{ kind: 'app', appId: 'resume', title: 'Resume.pdf', icon: Icons.pdf }];
+            }
+        },
+        certificates: {
+            path: 'This PC\\Certificates',
+            items() {
+                return (WindowManager.portfolioData().certs || []).map((c, i) => ({
+                    kind: 'cert', index: i, title: c.name, sub: c.org, color1: c.color1, color2: c.color2
+                }));
+            }
+        },
+        projects: {
+            path: 'This PC\\Projects',
+            items() {
+                return (WindowManager.portfolioData().projects || []).map(p => ({
+                    kind: 'item', title: p.title, sub: p.views + ' views · ' + p.time, color1: p.c1, color2: p.c2
+                }));
+            }
+        }
+    },
+
+    renderMyPc(appData) {
+        return this.renderExplorerFrame(appData, this.renderFsItems(this.fsDirs.root.items()), 'This PC', true);
+    },
+
+    renderFsItems(items) {
+        return items.map((item) => {
+            if (item.kind === 'cert' || item.kind === 'item') {
+                const dataAttr = item.kind === 'cert' ? ` data-cert="${item.index}"` : '';
+                return `
+                    <div class="explorer-item"${dataAttr} role="button" tabindex="0" style="cursor:${item.kind === 'cert' ? 'pointer' : 'default'}">
+                        <div class="explorer-item-ico" style="--g:linear-gradient(135deg,${item.color1},${item.color2})">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                        </div>
+                        <div class="explorer-item-name">${esc(item.title)}</div>
+                        <div class="explorer-item-sub">${esc(item.sub || '')}</div>
+                    </div>`;
+            }
+            const dataAttr = item.kind === 'folder' ? ` data-nav-folder="${item.nav}"` : ` data-open-app="${item.appId}"`;
+            return `
+                <div class="explorer-item"${dataAttr} role="button" tabindex="0" style="cursor:pointer">
+                    <img src="${item.icon}" alt="${esc(item.title)}" style="width:40px;height:40px;">
+                    <div class="explorer-item-name">${esc(item.title)}</div>
+                    ${item.sub ? `<div class="explorer-item-sub">${esc(item.sub)}</div>` : ''}
+                </div>`;
+        }).join('');
+    },
+
+    renderFsDir(winEl, dirId) {
+        const dir = this.fsDirs[dirId];
+        if (!dir) return;
+        const main = winEl.querySelector('.explorer-main');
+        const pathEl = winEl.querySelector('.explorer-path');
+        const back = winEl.querySelector('[data-nav-back]');
+        if (main) main.innerHTML = this.renderFsItems(dir.items());
+        if (pathEl) pathEl.textContent = dir.path;
+        if (back) back.style.visibility = (winEl._fsStack || []).length <= 1 ? 'hidden' : 'visible';
+    },
+
+    navigateFolder(winEl, dirId) {
+        if (!winEl || !winEl._fsStack || !this.fsDirs[dirId]) return;
+        winEl._fsStack.push(dirId);
+        this.renderFsDir(winEl, dirId);
+    },
+
+    navigateBack(winEl) {
+        if (!winEl || !winEl._fsStack || winEl._fsStack.length <= 1) return;
+        winEl._fsStack.pop();
+        this.renderFsDir(winEl, winEl._fsStack[winEl._fsStack.length - 1]);
+    },
+
+    renderGitHubBody() {
+        const profile = this.portfolioData().profile || {};
+        const rows = [
+            { label: 'GitHub', value: profile.github },
+            { label: 'LinkedIn', value: profile.linkedin },
+            { label: 'Website', value: profile.website },
+            { label: 'Email', value: profile.email },
+            { label: 'Location', value: profile.location }
+        ];
+        return rows.map((r) => `
+            <div class="explorer-item" style="width:auto;flex-direction:row;align-items:center;text-align:left;gap:12px;cursor:default;">
+                <img src="${Icons.network}" alt="" style="width:28px;height:28px;">
+                <div>
+                    <div class="explorer-item-name">${esc(r.label)}</div>
+                    <div class="explorer-item-sub">${esc(r.value || '')}</div>
+                </div>
             </div>`).join('');
     },
 
@@ -695,31 +841,97 @@ const StartMenuManager = {
     init() {
         this.menuEl = el('start-menu');
         
-        // Populate pinned apps
+        // Populate pinned apps from the shared app registry (same apps as the desktop).
         const pinnedContainer = this.menuEl.querySelector('.pinned-apps');
         const pinnedList = [
-            {icon: Icons.computer, name: 'This PC'},
-            {icon: Icons.network, name: 'GitHub'},
-            {icon: Icons.folder, name: 'Projects'},
-            {icon: Icons.pdf, name: 'Resume'},
-            {icon: Icons.trash, name: 'Recycle Bin'},
-            {icon: Icons.folder, name: 'Certificates'}
+            { appId: 'this-pc', name: 'This PC' },
+            { appId: 'github', name: 'GitHub' },
+            { appId: 'projects', name: 'Projects' },
+            { appId: 'resume', name: 'Resume' },
+            { appId: 'recycle', name: 'Recycle Bin' },
+            { appId: 'cert', name: 'Certificates' }
         ];
-        
-        pinnedList.forEach(app => {
+        pinnedList.forEach(item => {
+            const app = appById(item.appId);
+            if (!app) return;
             pinnedContainer.innerHTML += `
-                <div class="pinned-app">
-                    <img src="${app.icon}">
-                    <span>${app.name}</span>
+                <div class="pinned-app" data-open-app="${item.appId}" role="button" tabindex="0" aria-label="Open ${esc(item.name)}">
+                    <img src="${app.icon}" alt="">
+                    <span>${esc(item.name)}</span>
                 </div>
             `;
         });
+
+        // Pins, recommended files and search results all launch via the shared launcher.
+        this.menuEl.addEventListener('click', (e) => {
+            const launch = e.target.closest('[data-open-app], [data-open-cert]');
+            if (!launch) return;
+            if (launch.dataset.openApp) {
+                const app = appById(launch.dataset.openApp);
+                if (app) WindowManager.open(app);
+                this.hide();
+            } else if (launch.dataset.openCert) {
+                WindowManager.openCert(launch.dataset.openCert);
+                this.hide();
+            }
+        });
+
+        // Live search over the existing app list (case-insensitive, partial match).
+        const searchInput = this.menuEl.querySelector('.start-search input');
+        searchInput.addEventListener('input', () => this.filterApps(searchInput.value));
 
         document.addEventListener('click', (e) => {
             if (this.isOpen && !this.menuEl.contains(e.target) && !el('start-btn').contains(e.target)) {
                 this.hide();
             }
         });
+    },
+
+    filterApps(query) {
+        const results = el('start-search-results');
+        if (!results) return;
+        const q = query.trim().toLowerCase();
+        if (!q) {
+            results.innerHTML = '';
+            this.setSearchMode(false);
+            return;
+        }
+
+        const matches = [];
+        STATE.desktopIcons.forEach(app => {
+            const haystack = (app.title + ' ' + (app.keywords || '')).toLowerCase();
+            if (haystack.indexOf(q) !== -1) {
+                matches.push({ type: 'app', appId: app.id, title: app.title, icon: app.icon, sub: app.type === 'pdf' ? 'Document' : 'Application' });
+            }
+        });
+        (WindowManager.portfolioData().certs || []).forEach((c, i) => {
+            if ((c.name + ' ' + c.org).toLowerCase().indexOf(q) !== -1) {
+                matches.push({ type: 'cert', index: i, title: c.name, sub: c.org, icon: Icons.folder });
+            }
+        });
+
+        this.setSearchMode(true);
+        results.innerHTML = matches.length
+            ? matches.map(m => {
+                const dataAttr = m.type === 'app' ? `data-open-app="${m.appId}"` : `data-open-cert="${m.index}"`;
+                return `
+                    <div class="rec-item" ${dataAttr} role="button" tabindex="0" aria-label="Open ${esc(m.title)}">
+                        <div class="rec-icon"><img src="${m.icon}" alt="" style="width:24px;height:24px;display:block"></div>
+                        <div class="rec-details">
+                            <div class="rec-name">${esc(m.title)}</div>
+                            <div class="rec-time">${esc(m.sub)}</div>
+                        </div>
+                    </div>`;
+            }).join('')
+            : '<div class="rec-item"><div class="rec-details"><div class="rec-name">No results found</div></div></div>';
+    },
+
+    setSearchMode(on) {
+        const results = el('start-search-results');
+        this.menuEl.querySelectorAll('.start-section-title, .pinned-apps, .recommended-files').forEach(el => {
+            el.classList.toggle('hidden', on);
+        });
+        if (results) results.classList.toggle('hidden', !on);
     },
 
     toggle() {
@@ -736,6 +948,9 @@ const StartMenuManager = {
     hide() {
         this.menuEl.classList.add('hidden');
         this.isOpen = false;
+        const input = this.menuEl.querySelector('.start-search input');
+        if (input && input.value) input.value = '';
+        this.setSearchMode(false);
     }
 };
 
