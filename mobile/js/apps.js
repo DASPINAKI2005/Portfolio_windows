@@ -1095,6 +1095,12 @@
         state: {
             whatsappOpen: -1
         },
+        /** Shared portfolio content, also consumed by the desktop build. */
+        data: {
+            profile: PROFILE,
+            certs: CERTS,
+            resume: RESUME
+        },
         all: APPS,
         byId: BY_ID,
         gridApps: APPS.filter(function (a) {

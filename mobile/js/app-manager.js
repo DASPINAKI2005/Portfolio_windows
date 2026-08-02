@@ -67,7 +67,9 @@
 
         /** Brings an app instance to the top of the stack. */
         focus: function (instance) {
+            if (this.mount) this.mount.classList.add('has-apps');
             this.stack.forEach(function (s, i) {
+                s.holder.hidden = false;
                 s.holder.style.zIndex = String(3 + i);
             });
             this.stack.forEach(function (s) {
@@ -144,8 +146,10 @@
             Android.Recents.close();
             Android.Shell.toggleShade(false);
             Android.Home.reset();
-            const top = this.top();
-            if (top && top.app) top.app.setAttribute('aria-hidden', 'true');
+            this.stack.forEach(function (s) {
+                s.holder.hidden = true;
+            });
+            if (this.mount) this.mount.classList.remove('has-apps');
         }
     });
 })(window);

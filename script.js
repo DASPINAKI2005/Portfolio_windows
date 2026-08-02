@@ -34,6 +34,11 @@ const STATE = {
 
 // --- Utilities ---
 const el = (id) => document.getElementById(id);
+const esc = (value) => {
+    if (window.Android && Android.Utils && Android.Utils.esc) return Android.Utils.esc(value);
+    return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+};
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -325,44 +330,14 @@ const WindowManager = {
         // Generate Content
         const contentArea = winEl.querySelector('.window-content');
         if (appData.type === 'pdf') {
-            contentArea.innerHTML = `
-                <div style="display:flex; flex-direction:column; height:100%;">
-                    <div class="pdf-toolbar">
-                        <span>${appData.title}</span>
-                        <button class="pdf-btn">Download</button>
-                    </div>
-                    <div class="pdf-content">
-                        <div style="text-align:center; padding: 40px;">
-                            <!-- TODO: Replace this simulated preview with the real Resume.pdf asset -->
-                            <h2>Pinaki Das — Resume Preview</h2>
-                            <p>This is a simulated view of ${appData.title}. Replace it with the real resume PDF.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            contentArea.innerHTML = this.renderPdfContent(appData);
+        } else if (appData.type === 'folder') {
+            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderCertGrid());
         } else {
-            // Default Explorer View
-            contentArea.innerHTML = `
-                <div class="explorer-layout">
-                    <div class="explorer-toolbar">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2l14 6-14 6V2z"/></svg>
-                        <div style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; flex-grow: 1; font-size: 13px;">
-                            C:\\Users\\Pinaki\\Desktop\\${appData.title}
-                        </div>
-                    </div>
-                    <div class="explorer-body">
-                        <div class="explorer-nav">
-                            <div class="nav-item">⭐ Quick access</div>
-                            <div class="nav-item">💻 This PC</div>
-                            <div class="nav-item">🌐 Network</div>
-                        </div>
-                        <div class="explorer-main">
-                            <div style="color: var(--text-secondary); font-size: 13px;">This folder is empty.</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+            contentArea.innerHTML = this.renderExplorerFrame(
+                appData,
+                '<div style="color: var(--text-secondary); font-size: 13px;">This folder is empty.</div>'
+            );
         }
 
         // Controls binding
@@ -396,7 +371,14 @@ const WindowManager = {
     toggleMaximize(winId) {
         const winEl = el(winId);
         if(!winEl) return;
-        winEl.classList.toggle('maximized');
+        const isMaximized = winEl.classList.toggle('maximized');
+        const btn = winEl.querySelector('.maximize');
+        if (btn) {
+            btn.innerHTML = isMaximized
+                ? '<svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><path d="M1.5 3.5h5v5h-5z M3.5 1.5h5v5h-5z" fill="none" stroke="currentColor" stroke-width="1"/></svg>'
+                : '<svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" stroke="currentColor" stroke-width="1" fill="none"/></svg>';
+            btn.setAttribute('aria-label', isMaximized ? 'Restore' : 'Maximize');
+        }
     },
 
     minimize(winId) {
@@ -430,6 +412,11 @@ const WindowManager = {
 
     bindDrag(winEl) {
         const titleBar = winEl.querySelector('.title-bar');
+
+        titleBar.addEventListener('dblclick', (e) => {
+            if(e.target.closest('.ctrl-btn')) return;
+            this.toggleMaximize(winEl.id);
+        });
         
         titleBar.addEventListener('mousedown', (e) => {
             if(e.target.closest('.ctrl-btn')) return;
@@ -510,6 +497,88 @@ const WindowManager = {
                 document.addEventListener('mouseup', onMouseUp);
             });
         });
+    },
+
+    /** Shared portfolio content reused from the mobile build (apps.js). */
+    portfolioData() {
+        return (window.Android && Android.Apps && Android.Apps.data)
+            ? Android.Apps.data
+            : { profile: {}, certs: [], resume: {} };
+    },
+
+    renderExplorerFrame(appData, bodyHtml) {
+        return `
+            <div class="explorer-layout">
+                <div class="explorer-toolbar">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2l14 6-14 6V2z"/></svg>
+                    <div style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; flex-grow: 1; font-size: 13px;">
+                        C:\\Users\\Pinaki\\Desktop\\${esc(appData.title)}
+                    </div>
+                </div>
+                <div class="explorer-body">
+                    <div class="explorer-nav">
+                        <div class="nav-item">⭐ Quick access</div>
+                        <div class="nav-item">💻 This PC</div>
+                        <div class="nav-item">🌐 Network</div>
+                    </div>
+                    <div class="explorer-main">
+                        ${bodyHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    renderCertGrid() {
+        const certs = this.portfolioData().certs || [];
+        if (!certs.length) {
+            return '<div style="color: var(--text-secondary); font-size: 13px;">This folder is empty.</div>';
+        }
+        return certs.map((c) => `
+            <div class="explorer-item">
+                <div class="explorer-item-ico" style="--g:linear-gradient(135deg,${c.color1},${c.color2})">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                </div>
+                <div class="explorer-item-name">${esc(c.name)}</div>
+                <div class="explorer-item-sub">${esc(c.org)}</div>
+            </div>`).join('');
+    },
+
+    renderPdfContent(appData) {
+        const data = this.portfolioData();
+        const profile = data.profile || {};
+        const resume = data.resume || {};
+        const expItems = (resume.experience || []).map((e) => `
+            <li class="pdf-resume-item"><strong>${esc(e.role)}</strong><span>${esc(e.org)} · ${esc(e.years)}</span></li>`).join('');
+        const eduItems = (resume.education || []).map((e) => `
+            <li class="pdf-resume-item"><strong>${esc(e.degree)}</strong><span>${esc(e.org)} · ${esc(e.years)}</span></li>`).join('');
+        return `
+            <div style="display:flex; flex-direction:column; height:100%;">
+                <div class="pdf-toolbar">
+                    <span>${esc(appData.title)}</span>
+                    <button class="pdf-btn">Download</button>
+                </div>
+                <div class="pdf-content">
+                    <div class="pdf-paper">
+                        <h2 class="pdf-name">${esc(profile.name || 'Resume')}</h2>
+                        <p class="pdf-headline">${esc(profile.headline || '')}</p>
+                        <div class="pdf-paper-section">
+                            <h3>Summary</h3>
+                            <p>${esc(resume.summary || '')}</p>
+                        </div>
+                        <div class="pdf-paper-section">
+                            <h3>Experience</h3>
+                            <ul>${expItems}</ul>
+                        </div>
+                        <div class="pdf-paper-section">
+                            <h3>Education</h3>
+                            <ul>${eduItems}</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 };
 
