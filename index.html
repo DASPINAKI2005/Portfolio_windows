@@ -45,6 +45,20 @@
         <div id="window-container"></div>
     </main>
 
+    <!-- Power Screen (Restart / Shut Down) -->
+    <div id="power-screen" class="hidden" hidden>
+        <div class="power-screen-stage" id="power-screen-stage">
+            <div class="power-dots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="power-screen-text" id="power-screen-text">Shutting down</div>
+        </div>
+        <div class="power-off" id="power-off" hidden>
+            <div class="power-off-title">Your PC has been shut down.</div>
+            <div class="power-off-footer">
+                <button type="button" class="power-signin" id="power-signin-btn">Sign In</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Context Menu -->
     <div id="context-menu" class="acrylic-menu" hidden>
         <div class="menu-item">View</div>
@@ -92,6 +106,16 @@
             </div>
             <div class="power-btn" tabindex="0" role="button" aria-label="Power">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+            </div>
+        </div>
+        <div id="power-menu" class="acrylic-panel" hidden>
+            <div class="power-menu-item" data-power-action="restart" role="button" tabindex="0" aria-label="Restart">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v4l5-5-5-5v4z"/></svg>
+                <span>Restart</span>
+            </div>
+            <div class="power-menu-item" data-power-action="shutdown" role="button" tabindex="0" aria-label="Shut Down">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+                <span>Shut Down</span>
             </div>
         </div>
     </div>

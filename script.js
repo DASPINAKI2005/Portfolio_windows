@@ -46,6 +46,38 @@ const esc = (value) => {
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 };
 
+// --- Networking app data ---
+const NETWORK_LINKS = [
+    {
+        id: 'email',
+        label: 'Email',
+        account: 'daspinaki2005@gmail.com',
+        href: 'mailto:daspinaki2005@gmail.com',
+        icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0F6CBD"/><path d="M4.5 7.5h15v9h-15z" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M4.8 7.6 12 13.2l7.2-5.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    },
+    {
+        id: 'linkedin',
+        label: 'LinkedIn',
+        account: 'linkedin.com/in/pinaki-das-9a2860281',
+        href: 'https://linkedin.com/in/pinaki-das-9a2860281',
+        icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><path fill="#fff" d="M6.5 9.2v7.8H4.2V9.2h2.3zM4.3 5.4a1.4 1.4 0 1 1 2.7 0 1.4 1.4 0 0 1-2.7 0zM12.9 10v-1.4h-2.3V17h2.3v-3.9c0-1 .5-1.8 1.6-1.8 1 0 1.5.7 1.5 1.8V17h2.3v-4.4c0-2.3-1.2-3.5-3-3.5-1.4 0-2 .7-2.4 1.4z"/></svg>'
+    },
+    {
+        id: 'github',
+        label: 'GitHub',
+        account: 'github.com/DASPINAKI2005',
+        href: 'https://github.com/DASPINAKI2005',
+        icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="#18181b"/><path fill="#fff" d="M12 4.5A7.5 7.5 0 0 0 8.9 19c.4.1.5-.2.5-.4v-1.4c-2 .4-2.4-.9-2.4-.9-.3-.8-.8-1-.8-1-.7-.5 0-.5 0-.5.8.1 1.2.8 1.2.8.7 1.2 1.8.9 2.2.7.1-.5.3-.9.5-1.1-1.7-.2-3.5-.9-3.5-3.9 0-.9.3-1.6.8-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.6 7.6 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.5 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.2 0 3-1.8 3.7-3.5 3.9.3.3.6.8.6 1.6v2.2c0 .2.1.5.5.4A7.5 7.5 0 0 0 12 4.5z"/></svg>'
+    },
+    {
+        id: 'instagram',
+        label: 'Instagram',
+        account: 'instagram.com/daspinaki2005',
+        href: 'https://instagram.com/daspinaki2005',
+        icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="net-ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F58529"/><stop offset=".5" stop-color="#DD2A7B"/><stop offset="1" stop-color="#8134AF"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#net-ig)"/><rect x="5.7" y="5.7" width="12.6" height="12.6" rx="3.6" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.9" cy="7.1" r="1.3" fill="#fff"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.5"/></svg>'
+    }
+];
+
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     WallpaperManager.init();
@@ -56,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     StartMenuManager.init();
     WidgetsManager.init();
     SelectionManager.init();
+    PowerManager.init();
 });
 
 // --- Wallpaper Slideshow ---
@@ -332,6 +365,11 @@ const WindowManager = {
                     if (app) this.open(app);
                     return;
                 }
+                const netLink = e.target.closest('[data-network-link]');
+                if (netLink) {
+                    this.openNetworkLink(netLink.dataset.networkLink);
+                    return;
+                }
                 const dl = e.target.closest('[data-pdf-download]');
                 if (dl && dl.dataset.pdfDownload) {
                     const a = document.createElement('a');
@@ -385,6 +423,8 @@ const WindowManager = {
             contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderFsItems(this.fsDirs.projects.items()));
         } else if (appData.id === 'github') {
             contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderGitHubBody());
+        } else if (appData.id === 'network') {
+            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderNetworkBody());
         } else if (appData.type === 'folder') {
             contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderCertGrid());
         } else {
@@ -726,6 +766,31 @@ const WindowManager = {
             </div>`).join('');
     },
 
+    renderNetworkBody() {
+        return `
+            <div class="net-list">
+                ${NETWORK_LINKS.map((link) => `
+                    <div class="net-row" data-network-link="${link.id}" role="button" tabindex="0" aria-label="Open ${esc(link.label)}">
+                        <div class="net-icon">${link.icon}</div>
+                        <div class="net-info">
+                            <div class="net-name">${esc(link.label)}</div>
+                            <div class="net-account">${esc(link.account)}</div>
+                        </div>
+                        <div class="net-open">Open</div>
+                    </div>`).join('')}
+            </div>`;
+    },
+
+    openNetworkLink(id) {
+        const link = NETWORK_LINKS.find((l) => l.id === id);
+        if (!link) return;
+        if (id === 'email') {
+            window.location.href = link.href;
+        } else {
+            window.open(link.href, '_blank', 'noopener');
+        }
+    },
+
     renderPdfContent(appData) {
         if (appData.pdf) {
             return `
@@ -960,6 +1025,8 @@ const StartMenuManager = {
         this.menuEl.hidden = false;
         this.menuEl.classList.remove('hidden');
         this.isOpen = true;
+        const powerMenu = el('power-menu');
+        if (powerMenu) powerMenu.hidden = true;
         WidgetsManager.hide();
         ContextMenuManager.hide();
     },
@@ -1058,5 +1125,90 @@ const ClockManager = {
         
         el('time').textContent = timeStr;
         el('date').textContent = dateStr;
+    }
+};
+
+// --- Power Manager (Restart / Shut Down / Sign In) ---
+const PowerManager = {
+    screenEl: null,
+    stageEl: null,
+    offEl: null,
+    textEl: null,
+    shutDownMs: 2800,
+
+    init() {
+        this.screenEl = el('power-screen');
+        this.stageEl = el('power-screen-stage');
+        this.offEl = el('power-off');
+        this.textEl = el('power-screen-text');
+
+        const powerBtn = document.querySelector('.power-btn');
+        if (powerBtn) {
+            powerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+        }
+
+        const menu = el('power-menu');
+        if (menu) {
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const action = e.target.closest('[data-power-action]');
+                if (!action) return;
+                this.closeMenu();
+                if (action.dataset.powerAction === 'restart') this.restart();
+                else if (action.dataset.powerAction === 'shutdown') this.shutdown();
+            });
+        }
+
+        const signIn = el('power-signin-btn');
+        if (signIn) signIn.addEventListener('click', () => this.signIn());
+    },
+
+    toggleMenu() {
+        const menu = el('power-menu');
+        if (!menu) return;
+        if (menu.hidden) {
+            StartMenuManager.show();
+            menu.hidden = false;
+        } else {
+            menu.hidden = true;
+        }
+    },
+
+    closeMenu() {
+        const menu = el('power-menu');
+        if (menu) menu.hidden = true;
+    },
+
+    restart() {
+        this.showScreen('Restarting');
+        setTimeout(() => {
+            window.location.reload();
+        }, this.shutDownMs);
+    },
+
+    shutdown() {
+        this.showScreen('Shutting down');
+        setTimeout(() => {
+            this.stageEl.hidden = true;
+            this.offEl.hidden = false;
+        }, this.shutDownMs);
+    },
+
+    showScreen(text) {
+        StartMenuManager.hide();
+        this.closeMenu();
+        this.stageEl.hidden = false;
+        this.offEl.hidden = true;
+        this.textEl.textContent = text;
+        this.screenEl.classList.remove('hidden');
+        this.screenEl.hidden = false;
+    },
+
+    signIn() {
+        try { sessionStorage.removeItem('welcome-overlay-seen'); } catch (e) {}
+        window.location.reload();
     }
 };

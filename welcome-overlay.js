@@ -17,6 +17,8 @@
     var HOLD_MS = 3000;  // time the overlay stays fully visible
     var FADE_MS = 600;   // fade in / fade out duration
 
+    var overlay = document.getElementById('welcome-overlay');
+
     // Only show once per browser session.
     var seen = false;
     try {
@@ -24,9 +26,14 @@
     } catch (e) {
         // sessionStorage unavailable (private/blocked) -> just show once this load.
     }
-    if (seen) return;
+    if (seen) {
+        // Already seen this session (e.g. after a restart reload): the overlay
+        // markup is still in the DOM and would silently block all pointer
+        // events, so remove it before leaving.
+        if (overlay) overlay.remove();
+        return;
+    }
 
-    var overlay = document.getElementById('welcome-overlay');
     var title = document.getElementById('welcome-title');
     if (!overlay) return;
 

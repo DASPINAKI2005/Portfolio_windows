@@ -441,6 +441,169 @@ body {
     background: var(--hover-bg);
 }
 
+/* Power Menu (Restart / Shut Down) */
+#power-menu {
+    position: absolute;
+    bottom: 64px;
+    right: 24px;
+    min-width: 190px;
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: var(--window-shadow);
+}
+.power-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: default;
+}
+.power-menu-item:hover {
+    background: var(--hover-bg);
+}
+.power-menu-item svg {
+    color: var(--text-secondary);
+}
+
+/* Power Screen (Restart / Shut Down) */
+#power-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 200000;
+    background: #0b0d10;
+    font-family: inherit;
+}
+#power-screen:not(.hidden) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#power-screen.hidden {
+    display: none;
+}
+.power-screen-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+.power-dots {
+    display: flex;
+    gap: 8px;
+}
+.power-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    animation: powerPulse 1.2s ease-in-out infinite;
+}
+.power-dots span:nth-child(2) { animation-delay: .1s; }
+.power-dots span:nth-child(3) { animation-delay: .2s; }
+.power-dots span:nth-child(4) { animation-delay: .3s; }
+.power-dots span:nth-child(5) { animation-delay: .4s; }
+@keyframes powerPulse {
+    0%, 100% { transform: scale(1); opacity: .35; }
+    30% { transform: scale(1.35); opacity: 1; }
+}
+.power-screen-text {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+.power-off {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 48px 0;
+    animation: powerFadeIn .5s ease both;
+}
+@keyframes powerFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.power-off-title {
+    font-size: 22px;
+    color: var(--text-primary);
+}
+.power-signin {
+    min-width: 180px;
+    padding: 10px 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--mica-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .15s ease;
+}
+.power-signin:hover {
+    background: var(--hover-bg);
+}
+
+/* Networking app rows */
+.net-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.net-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+.net-row:hover {
+    background: var(--hover-bg);
+    border-color: rgba(96, 205, 255, 0.35);
+}
+.net-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.net-icon svg {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+.net-info {
+    flex-grow: 1;
+    min-width: 0;
+}
+.net-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.net-account {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.net-open {
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
 /* Widgets Panel */
 #widgets-panel {
     position: absolute;
