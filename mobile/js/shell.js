@@ -12,6 +12,7 @@
     const I = Android.Icons;
 
     /** Wallpapers are crossfaded in order. Add more entries for a slideshow. */
+    // TODO: Replace mobile/media/wallpaper.jpg with a personal wallpaper.
     const WALLPAPERS = ['mobile/media/wallpaper.jpg'];
     const WALLPAPER_SLIDESHOW_MS = 0; // 0 disables the slideshow
 
@@ -172,7 +173,7 @@
                     '</div>' +
                     '<div class="android-shade__notifs">' +
                     '<div class="android-notif">' + I.whatsapp +
-                    '<div class="android-notif__body"><strong>WhatsApp</strong><span>New message from HR Manager</span></div></div>' +
+                    '<div class="android-notif__body"><strong>WhatsApp</strong><span>New message from Recruiter</span></div></div>' +
                     '<div class="android-notif">' + I.chatgpt +
                     '<div class="android-notif__body"><strong>ChatGPT</strong><span>Ready to help</span></div></div>' +
                     '</div>'

@@ -3,7 +3,7 @@
  * App registry, portfolio content data, screen renderers, and delegated
  * action handling. This is the "content layer" of the Android simulation.
  *
- * All content below is placeholder portfolio data - edit the PROFILE,
+ * All content below is real portfolio data for Pinaki Das - edit the PROFILE,
  * PROJECTS, SKILLS, CERTS, EMAILS, CHATS and FILES arrays to customize.
  */
 (function (global) {
@@ -17,114 +17,119 @@
      * EDITABLE PORTFOLIO DATA
      * ============================================================ */
 
+    // TODO: Replace the letter-initial avatars below with a real profile photo
+    //       (e.g. mobile/media/profile.jpg) once one is available.
     const PROFILE = {
-        name: 'Alex Morgan',
-        headline: 'Full-Stack Developer & UI Engineer',
-        tagline: 'I craft fast, accessible interfaces and the systems behind them.',
-        role: 'Full-Stack Developer',
-        location: 'Berlin, Germany',
-        email: 'hello@alexmorgan.dev',
-        phone: '+49 170 000 0000',
-        website: 'alexmorgan.dev',
-        handle: 'alexmorgan',
+        name: 'Pinaki Das',
+        headline: 'Aspiring AI Engineer | Python Developer | Generative AI Developer',
+        tagline: 'Building intelligent AI applications with Python, LLMs and RAG.',
+        role: 'Aspiring AI Engineer',
+        location: 'Kolkata, West Bengal, India',
+        email: 'daspinaki2005@gmail.com',
+        phone: '9800167772',
+        website: 'github.com/DASPINAKI2005',
+        github: 'github.com/DASPINAKI2005',
+        linkedin: 'linkedin.com/in/pinaki-das-9a2860281',
+        handle: 'DASPINAKI2005',
         subs: '1.4K',
-        ytDesc: 'Portfolio, projects and experiments — one build at a time.',
-        instaBio: 'Building things for the web • Coffee powered ☕ …(no emoji)',
-        bio: 'I am a Full-Stack Developer with 5+ years of experience shipping responsive web apps, design systems, and interactive experiences for clients across Europe.'
+        ytDesc: 'AI projects, experiments and builds — one commit at a time.',
+        instaBio: 'Aspiring AI Engineer • Python • LLMs & RAG • Building in public',
+        bio: 'Aspiring AI Engineer and Computer Science undergraduate with a strong project-driven foundation in Python, LLMs, Prompt Engineering, and Retrieval-Augmented Generation (RAG). Experienced in building production-ready AI applications with FastAPI and React, covering everything from REST APIs to responsive UIs with clean, maintainable code.'
     };
 
     const PROJECTS = [
-        { title: 'Android Portfolio — Phone Simulation', views: '4.2K', time: '2 days ago', dur: '3:24', c1: '#34d399', c2: '#0ea5e9' },
-        { title: 'Windows 11 Desktop Simulation', views: '12K', time: '1 week ago', dur: '4:58', c1: '#60a5fa', c2: '#a78bfa' },
-        { title: 'Full-Stack Web App Architecture', views: '2.1K', time: '3 weeks ago', dur: '6:12', c1: '#f472b6', c2: '#fb923c' },
-        { title: 'Building Design Systems', views: '8.7K', time: '1 month ago', dur: '5:05', c1: '#fbbf24', c2: '#f43f5e' },
-        { title: 'AI-Powered Chat Assistant', views: '3.3K', time: '2 months ago', dur: '4:44', c1: '#a78bfa', c2: '#34d399' },
-        { title: 'Performance Tuning Guide', views: '1.8K', time: '3 months ago', dur: '7:31', c1: '#38bdf8', c2: '#818cf8' }
+        { title: 'Nova — Local AI Chatbot', views: '4.2K', time: '2 days ago', dur: '3:24', c1: '#34d399', c2: '#0ea5e9' },
+        { title: 'Real-Time Object Detection Web App', views: '12K', time: '1 week ago', dur: '4:58', c1: '#60a5fa', c2: '#a78bfa' },
+        { title: 'The Eighth Wonder — AI Project Idea Generator', views: '2.1K', time: '3 weeks ago', dur: '6:12', c1: '#f472b6', c2: '#fb923c' }
     ];
 
     const SKILLS = [
-        { name: 'JavaScript', letter: 'JS', cat: 'Language', rating: '4.9', grad: 'linear-gradient(135deg,#f7df1e,#d4a017)' },
-        { name: 'React', letter: '⚛', cat: 'Library', rating: '4.8', grad: 'linear-gradient(135deg,#61dafb,#2563eb)' },
-        { name: 'Node.js', letter: 'N', cat: 'Runtime', rating: '4.7', grad: 'linear-gradient(135deg,#3c873a,#1e8449)' },
-        { name: 'TypeScript', letter: 'TS', cat: 'Language', rating: '4.8', grad: 'linear-gradient(135deg,#3178c6,#1d4ed8)' },
-        { name: 'HTML & CSS', letter: 'H', cat: 'Core Web', rating: '5.0', grad: 'linear-gradient(135deg,#e34f26,#1572b6)' },
-        { name: 'Python', letter: 'Py', cat: 'Language', rating: '4.6', grad: 'linear-gradient(135deg,#3776ab,#f5d547)' },
-        { name: 'Figma', letter: 'F', cat: 'Design', rating: '4.9', grad: 'linear-gradient(135deg,#a259ff,#ff7262)' },
-        { name: 'Git & CI/CD', letter: 'G', cat: 'DevOps', rating: '4.7', grad: 'linear-gradient(135deg,#f05033,#b3202c)' }
+        { name: 'Python', letter: 'Py', cat: 'Language', rating: '4.9', grad: 'linear-gradient(135deg,#f7df1e,#d4a017)' },
+        { name: 'JavaScript', letter: 'JS', cat: 'Language', rating: '4.8', grad: 'linear-gradient(135deg,#61dafb,#2563eb)' },
+        { name: 'SQL', letter: 'SQL', cat: 'Language', rating: '4.7', grad: 'linear-gradient(135deg,#3c873a,#1e8449)' },
+        { name: 'FastAPI', letter: 'F', cat: 'Backend', rating: '4.8', grad: 'linear-gradient(135deg,#3178c6,#1d4ed8)' },
+        { name: 'Flask', letter: 'Fl', cat: 'Backend', rating: '5.0', grad: 'linear-gradient(135deg,#e34f26,#1572b6)' },
+        { name: 'PostgreSQL', letter: 'PG', cat: 'Database', rating: '4.6', grad: 'linear-gradient(135deg,#3776ab,#f5d547)' },
+        { name: 'Prompt Engineering', letter: 'PE', cat: 'AI', rating: '4.9', grad: 'linear-gradient(135deg,#a259ff,#ff7262)' },
+        { name: 'RAG & LLMs', letter: 'R', cat: 'AI', rating: '4.7', grad: 'linear-gradient(135deg,#f05033,#b3202c)' }
     ];
 
     const CERTS = [
-        { name: 'Frontend Development', org: 'CertifyMe', color1: '#60a5fa', color2: '#818cf8' },
-        { name: 'JavaScript Algorithms', org: 'CodeAcademy', color1: '#fbbf24', color2: '#f59e0b' },
-        { name: 'React & Modern UI', org: 'MetaSkills', color1: '#34d399', color2: '#0ea5e9' },
-        { name: 'Cloud Foundations', org: 'CloudCert', color1: '#f472b6', color2: '#fb923c' },
-        { name: 'UI/UX Design Sprint', org: 'DesignLab', color1: '#a78bfa', color2: '#ec4899' },
-        { name: 'System Design Basics', org: 'ArchPro', color1: '#38bdf8', color2: '#10b981' }
+        { name: 'Introduction to AI', org: 'Google · Coursera', color1: '#60a5fa', color2: '#818cf8' },
+        { name: 'Maximize Productivity with AI Tools', org: 'Google · Coursera', color1: '#fbbf24', color2: '#f59e0b' },
+        { name: 'AWS Power Hour: Generative AI for Developers', org: 'AWS', color1: '#34d399', color2: '#0ea5e9' },
+        { name: 'PyTorch & DL for Decision Makers (LFS116)', org: 'Linux Foundation', color1: '#f472b6', color2: '#fb923c' },
+        { name: 'Planning a Generative AI Project', org: 'AWS', color1: '#a78bfa', color2: '#ec4899' }
     ];
 
     const EMAILS = [
-        { sender: 'Recruiting Team', subject: 'Your application is being reviewed', snippet: 'We were impressed by the interactive portfolio you submitted...', time: '09:12', grad: 'linear-gradient(135deg,#0ea5e9,#2563eb)', read: false },
-        { sender: 'GitHub', subject: '[GitHub] Update on your repositories', snippet: 'You have 2 new stars on "portfolio-app" and 1 new issue.', time: '08:30', grad: 'linear-gradient(135deg,#18181b,#3f3f46)', read: false },
-        { sender: 'CertifyMe', subject: 'Your certificate is ready to download', snippet: 'Congratulations! Your Frontend Development certificate is ready.', time: 'Yesterday', grad: 'linear-gradient(135deg,#f59e0b,#ef4444)', read: false },
-        { sender: 'Design Weekly', subject: '10 interface trends for this year', snippet: 'From glassmorphism to spatial design - what we are watching...', time: 'Yesterday', grad: 'linear-gradient(135deg,#ec4899,#a855f7)', read: true },
-        { sender: 'Mentor', subject: 'Feedback on your latest build', snippet: 'The animation work is polished. Let us talk about the API layer.', time: 'Mon', grad: 'linear-gradient(135deg,#10b981,#0d9488)', read: true }
+        { sender: 'GitHub', subject: '[GitHub] New stars on your repositories', snippet: 'Your repository "nova-ai-chatbot" received 2 new stars this week.', time: '09:12', grad: 'linear-gradient(135deg,#18181b,#3f3f46)', read: false },
+        { sender: 'Coursera', subject: 'Congratulations! You earned "Introduction to AI"', snippet: 'Your Google certificate is ready to view and download.', time: '08:30', grad: 'linear-gradient(135deg,#0ea5e9,#2563eb)', read: false },
+        { sender: 'LinkedIn', subject: 'You appeared in X searches this week', snippet: 'Recruiters found you for roles matching Python and AI development.', time: 'Yesterday', grad: 'linear-gradient(135deg,#0072b1,#004182)', read: false },
+        { sender: 'AWS', subject: 'Your Generative AI training progress', snippet: 'Complete "Planning a Generative AI Project" to unlock the next badge.', time: 'Yesterday', grad: 'linear-gradient(135deg,#f59e0b,#ef4444)', read: true },
+        { sender: 'University', subject: 'Academic reminder — project submission', snippet: 'Final year project report drafts are due before the end of the month.', time: 'Mon', grad: 'linear-gradient(135deg,#10b981,#0d9488)', read: true }
     ];
 
     const WHATSAPP_CHATS = [
-        { name: 'HR Manager', initials: 'HR', last: 'Thanks for applying!', time: '09:41', unread: 2, grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
-        { name: 'Dev Team', initials: 'DT', last: 'Great demo today 🙌', time: '08:12', unread: 0, grad: 'linear-gradient(135deg,#60a5fa,#a78bfa)' },
-        { name: 'Design Studio', initials: 'DS', last: 'Can you review the mockups?', time: 'Yesterday', unread: 0, grad: 'linear-gradient(135deg,#f472b6,#fb923c)' },
-        { name: 'Mentor', initials: 'ME', last: 'Keep shipping!', time: 'Mon', unread: 0, grad: 'linear-gradient(135deg,#fbbf24,#f43f5e)' }
+        { name: 'Recruiter', initials: 'RC', last: 'Thanks for applying!', time: '09:41', unread: 2, grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
+        { name: 'Nova Dev Team', initials: 'ND', last: 'Great demo today', time: '08:12', unread: 0, grad: 'linear-gradient(135deg,#60a5fa,#a78bfa)' },
+        { name: 'University', initials: 'UN', last: 'Reminder: project submission Friday', time: 'Yesterday', unread: 0, grad: 'linear-gradient(135deg,#f472b6,#fb923c)' },
+        { name: 'Mentor', initials: 'ME', last: 'Keep building!', time: 'Mon', unread: 0, grad: 'linear-gradient(135deg,#fbbf24,#f43f5e)' }
     ];
 
     const WHATSAPP_MESSAGES = {
         0: [
             { from: 'them', text: 'Hi! We received your portfolio.', time: '09:38' },
             { from: 'me', text: 'Thanks so much, glad it arrived!', time: '09:39' },
-            { from: 'them', text: 'The Android simulation impressed the team.', time: '09:40' }
+            { from: 'them', text: 'The Nova chatbot project impressed the team.', time: '09:40' }
         ],
         1: [
             { from: 'them', text: 'Merged your PR - nice work.', time: '08:05' },
             { from: 'me', text: 'Thank you! Happy to help.', time: '08:10' },
-            { from: 'them', text: 'Great demo today 🙌', time: '08:12' }
+            { from: 'them', text: 'Great demo today', time: '08:12' }
         ],
         2: [
-            { from: 'them', text: 'Sending the new mockups now.', time: 'Yesterday' },
-            { from: 'them', text: 'Can you review them this week?', time: 'Yesterday' }
+            { from: 'them', text: 'Reminder: project submission is due Friday.', time: 'Yesterday' },
+            { from: 'them', text: 'Make sure the report draft is uploaded.', time: 'Yesterday' }
         ],
         3: [
             { from: 'me', text: 'Shipped the portfolio update!', time: 'Mon' },
-            { from: 'them', text: 'Keep shipping!', time: 'Mon' }
+            { from: 'them', text: 'Keep building!', time: 'Mon' }
         ]
     };
 
+    // TODO: Replace the simulated Resume.pdf preview with the real resume file
+    //       (e.g. mobile/media/Resume.pdf) when it is ready.
     const DRIVE_FILES = [
-        { name: 'Resume.pdf', kind: 'pdf', meta: 'PDF · 320 KB · Updated today' },
-        { name: 'Certificates', kind: 'folder', meta: 'Folder · 6 items' },
-        { name: 'Projects', kind: 'folder', meta: 'Folder · 12 items' },
+        { name: 'Resume.pdf', kind: 'pdf', meta: 'PDF · Updated today' },
+        { name: 'Certificates', kind: 'folder', meta: 'Folder · 5 items' },
+        { name: 'Projects', kind: 'folder', meta: 'Folder · 3 items' },
         { name: 'CoverLetter.docx', kind: 'doc', meta: 'DOCX · 45 KB' },
-        { name: 'Portfolio-2026.fig', kind: 'fig', meta: 'Figma · 8 MB' }
+        { name: 'Projects-2026.md', kind: 'doc', meta: 'MD · 8 KB' }
     ];
 
     const RESUME = {
-        summary: 'Full-Stack Developer focused on responsive interfaces, design systems and developer tooling.',
+        summary: 'Aspiring AI Engineer and Computer Science undergraduate with a strong project-driven foundation in Python, LLMs, Prompt Engineering, and Retrieval-Augmented Generation (RAG).',
         experience: [
-            { role: 'Senior Frontend Engineer', org: 'Acme Studio', years: '2023 - Present' },
-            { role: 'Full-Stack Developer', org: 'Bright Labs', years: '2020 - 2023' }
+            { role: 'AI Project Developer', org: 'Self-Initiated Projects', years: '2024 - Present' },
+            { role: 'B.Tech Student (CSE)', org: 'Swami Vivekananda University', years: '2023 - 2027' }
         ],
         education: [
-            { degree: 'B.Sc. Computer Science', org: 'Technical University', years: '2016 - 2020' }
+            { degree: 'B.Tech, Computer Science & Engineering', org: 'Swami Vivekananda University', years: 'Expected 2027' },
+            { degree: 'Higher Secondary (WBCHSE)', org: 'West Bengal Council', years: '2023 · 71.6%' },
+            { degree: 'Secondary (WBBSE)', org: 'West Bengal Board', years: '2021 · 91%' }
         ]
     };
 
     const INSTA_STORIES = [
-        { name: 'Build', initials: 'B', grad: 'linear-gradient(135deg,#f58529,#dd2a7b)' },
-        { name: 'Coffee', initials: 'C', grad: 'linear-gradient(135deg,#8134af,#515bd4)' },
-        { name: 'Travel', initials: 'T', grad: 'linear-gradient(135deg,#f09433,#e6683c)' },
+        { name: 'AI', initials: 'AI', grad: 'linear-gradient(135deg,#f58529,#dd2a7b)' },
+        { name: 'Python', initials: 'Py', grad: 'linear-gradient(135deg,#8134af,#515bd4)' },
+        { name: 'Projects', initials: 'P', grad: 'linear-gradient(135deg,#f09433,#e6683c)' },
         { name: 'Code', initials: 'C', grad: 'linear-gradient(135deg,#17e9b6,#0ea5e9)' },
         { name: 'Design', initials: 'D', grad: 'linear-gradient(135deg,#a259ff,#ff7262)' }
     ];
 
+    // TODO: Replace these gradient tiles with real project/photo screenshots.
     const INSTA_POSTS = [
         { grad: 'linear-gradient(135deg,#60a5fa,#818cf8)' },
         { grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
@@ -134,27 +139,29 @@
         { grad: 'linear-gradient(135deg,#38bdf8,#10b981)' }
     ];
 
+    // TODO: Replace these gradient tiles with real certificate scans and
+    //       project screenshots (e.g. assets/icons/* or a photos/ folder).
     const PHOTOS = [
-        { name: 'Frontend Certificate', grad: 'linear-gradient(135deg,#60a5fa,#818cf8)' },
-        { name: 'React Certificate', grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
-        { name: 'Cloud Certificate', grad: 'linear-gradient(135deg,#f472b6,#fb923c)' },
-        { name: 'Design Sprint', grad: 'linear-gradient(135deg,#a78bfa,#ec4899)' },
-        { name: 'JS Algorithms', grad: 'linear-gradient(135deg,#fbbf24,#f59e0b)' },
-        { name: 'System Design', grad: 'linear-gradient(135deg,#38bdf8,#10b981)' },
-        { name: 'Project Screenshot', grad: 'linear-gradient(135deg,#2dd4bf,#6366f1)' },
-        { name: 'Hackathon', grad: 'linear-gradient(135deg,#fb7185,#f59e0b)' },
-        { name: 'Team Photo', grad: 'linear-gradient(135deg,#64748b,#0f172a)' }
+        { name: 'Introduction to AI', grad: 'linear-gradient(135deg,#60a5fa,#818cf8)' },
+        { name: 'Productivity with AI Tools', grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
+        { name: 'AWS Power Hour: GenAI', grad: 'linear-gradient(135deg,#f472b6,#fb923c)' },
+        { name: 'PyTorch & DL (LFS116)', grad: 'linear-gradient(135deg,#a78bfa,#ec4899)' },
+        { name: 'Planning a GenAI Project', grad: 'linear-gradient(135deg,#fbbf24,#f59e0b)' },
+        { name: 'Nova — AI Chatbot', grad: 'linear-gradient(135deg,#38bdf8,#10b981)' },
+        { name: 'Object Detection App', grad: 'linear-gradient(135deg,#2dd4bf,#6366f1)' },
+        { name: 'Eighth Wonder Generator', grad: 'linear-gradient(135deg,#fb7185,#f59e0b)' },
+        { name: 'Profile Photo', grad: 'linear-gradient(135deg,#64748b,#0f172a)' }
     ];
 
     const ALBUMS = [
-        { name: 'Certificates', count: 6, grad: 'linear-gradient(135deg,#60a5fa,#818cf8)' },
-        { name: 'Projects', count: 12, grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
-        { name: 'Events', count: 8, grad: 'linear-gradient(135deg,#a78bfa,#ec4899)' }
+        { name: 'Certificates', count: 5, grad: 'linear-gradient(135deg,#60a5fa,#818cf8)' },
+        { name: 'Projects', count: 3, grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
+        { name: 'About Me', count: 4, grad: 'linear-gradient(135deg,#a78bfa,#ec4899)' }
     ];
 
     const FB_POSTS = [
-        { who: 'Dev Team', time: '2h', grad: 'linear-gradient(135deg,#60a5fa,#a78bfa)', text: 'We just shipped the new onboarding flow. Zero regressions!', likes: '48', comments: '7', photo: true },
-        { who: 'Design Studio', time: '5h', grad: 'linear-gradient(135deg,#f472b6,#fb923c)', text: 'The design system workshop is open for signups.', likes: '31', comments: '4', photo: false }
+        { who: 'Pinaki Das', time: '2h', grad: 'linear-gradient(135deg,#60a5fa,#a78bfa)', text: 'Just shipped Nova, a local AI chatbot with streaming conversations, file analysis, web search and deep research, built with FastAPI and the Groq API.', likes: '48', comments: '7', photo: true },
+        { who: 'Pinaki Das', time: '1d', grad: 'linear-gradient(135deg,#f472b6,#fb923c)', text: 'Exploring RAG pipelines with Ollama and Llama 3.2 - building a project idea generator for aspiring developers.', likes: '31', comments: '4', photo: false }
     ];
 
     /* ============================================================
@@ -250,8 +257,8 @@
             { icon: I.email, title: 'Email', sub: PROFILE.email },
             { icon: I.globe, title: 'Website', sub: PROFILE.website },
             { icon: I.location, title: 'Location', sub: PROFILE.location },
-            { icon: I.github, title: 'GitHub', sub: 'github.com/' + PROFILE.handle },
-            { icon: I.linkedin, title: 'LinkedIn', sub: 'linkedin.com/in/' + PROFILE.handle }
+            { icon: I.github, title: 'GitHub', sub: PROFILE.github },
+            { icon: I.linkedin, title: 'LinkedIn', sub: PROFILE.linkedin }
         ].map(function (item, i) {
             return (
                 '<li class="android-list__item android-ripple-target" data-action="contact-copy" data-label="' + esc(item.title) + '" tabindex="0" role="button" aria-label="Copy ' + esc(item.title) + '">' +
@@ -342,7 +349,7 @@
             topbar:
                 '<header class="chrome__topbar">' +
                 '<span class="chrome__tab"><span class="chrome__favicon">' + I.chrome + '</span>Portfolio</span>' +
-                '<div class="chrome__url"><span>' + I.lock + '</span><span class="chrome__url-text">portfolio.example.com</span></div>' +
+                '<div class="chrome__url"><span>' + I.lock + '</span><span class="chrome__url-text">github.com/DASPINAKI2005</span></div>' +
                 '<div class="chrome__tools">' +
                 '<button class="android-app__topbtn android-ripple-target" data-action="chrome-refresh" aria-label="Refresh page">' + I.refresh + '</button>' +
                 '<button class="android-app__topbtn android-ripple-target" data-action="app-back" aria-label="Close browser">' + I.close + '</button>' +
@@ -1072,8 +1079,8 @@
     /** Tiny canned-response bot for the ChatGPT app. */
     function chatgptReply(input) {
         const q = input.toLowerCase();
-        if (q.indexOf('skill') > -1) return 'My core stack: JavaScript, TypeScript, React, Node.js and Python. The full list lives in the Play Store app.';
-        if (q.indexOf('project') > -1 || q.indexOf('work') > -1) return 'I have shipped 12+ projects - open YouTube to browse them, including the Android simulation you are using right now.';
+        if (q.indexOf('skill') > -1) return 'My core stack: Python, JavaScript, SQL, FastAPI, Flask and PostgreSQL. I also work with LLMs, Prompt Engineering and RAG - the full list lives in the Play Store app.';
+        if (q.indexOf('project') > -1 || q.indexOf('work') > -1) return 'I have built 3 real-world projects - open YouTube to browse them, including Nova, an AI chatbot, and a real-time object detection web app.';
         if (q.indexOf('contact') > -1 || q.indexOf('email') > -1 || q.indexOf('reach') > -1) return 'You can reach me at ' + PROFILE.email + ' or open the Contacts app for every channel.';
         if (q.indexOf('hi') > -1 || q.indexOf('hello') > -1 || q.indexOf('hey') > -1) return 'Hey there! Ask me about skills, projects or ways to get in touch.';
         if (q.indexOf('resume') > -1 || q.indexOf('cv') > -1) return 'Open the Drive app and tap Resume.pdf - it has a full simulated preview.';

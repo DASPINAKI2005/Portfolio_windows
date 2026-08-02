@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- Wallpaper Slideshow ---
+// TODO: Replace the default wallpapers in assets/wallpapers/ with personal ones.
 const WallpaperManager = {
     wallpapers: [
         'assets/wallpapers/wallpaper1.png',
@@ -332,8 +333,9 @@ const WindowManager = {
                     </div>
                     <div class="pdf-content">
                         <div style="text-align:center; padding: 40px;">
-                            <h2>PDF Preview Simulation</h2>
-                            <p>This is a simulated view of ${appData.title}.</p>
+                            <!-- TODO: Replace this simulated preview with the real Resume.pdf asset -->
+                            <h2>Pinaki Das — Resume Preview</h2>
+                            <p>This is a simulated view of ${appData.title}. Replace it with the real resume PDF.</p>
                         </div>
                     </div>
                 </div>
@@ -346,7 +348,7 @@ const WindowManager = {
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2l14 6-14 6V2z"/></svg>
                         <div style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 4px; flex-grow: 1; font-size: 13px;">
-                            C:\\Users\\User\\Desktop\\${appData.title}
+                            C:\\Users\\Pinaki\\Desktop\\${appData.title}
                         </div>
                     </div>
                     <div class="explorer-body">
@@ -577,15 +579,15 @@ const StartMenuManager = {
     init() {
         this.menuEl = el('start-menu');
         
-        // Populate pinned apps dummy data
+        // Populate pinned apps
         const pinnedContainer = this.menuEl.querySelector('.pinned-apps');
         const pinnedList = [
-            {icon: Icons.computer, name: 'Edge'},
-            {icon: Icons.folder, name: 'Word'},
-            {icon: Icons.trash, name: 'Excel'},
-            {icon: Icons.network, name: 'Store'},
-            {icon: Icons.pdf, name: 'Photos'},
-            {icon: Icons.computer, name: 'Settings'}
+            {icon: Icons.computer, name: 'This PC'},
+            {icon: Icons.network, name: 'GitHub'},
+            {icon: Icons.folder, name: 'Projects'},
+            {icon: Icons.pdf, name: 'Resume'},
+            {icon: Icons.trash, name: 'Recycle Bin'},
+            {icon: Icons.folder, name: 'Certificates'}
         ];
         
         pinnedList.forEach(app => {
