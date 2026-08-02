@@ -310,7 +310,12 @@ const WindowManager = {
         const winId = `win-${appData.id}-${Date.now()}`;
         
         if(STATE.windows.has(appData.id) && appData.id !== 'cert') {
-            this.focus(STATE.windows.get(appData.id).id);
+            const existing = STATE.windows.get(appData.id);
+            if (existing.style.opacity === '0') {
+                this.restore(existing.id);
+            } else {
+                this.focus(existing.id);
+            }
             return;
         }
 
@@ -385,7 +390,13 @@ const WindowManager = {
         const winEl = el(winId);
         if(!winEl) return;
         winEl.style.opacity = '0';
+        // The windowOpen animation's `forwards` fill keeps computed opacity at 1
+        // and overrides this inline value, so opacity alone leaves a visible but
+        // pointer-dead window stuck on screen. visibility:hidden is what really
+        // removes the window from the desktop while it is minimized.
+        winEl.style.visibility = 'hidden';
         winEl.style.pointerEvents = 'none';
+        STATE.activeWindowId = null;
         TaskbarManager.setAppActive(winId, false);
     },
 
@@ -393,6 +404,7 @@ const WindowManager = {
         const winEl = el(winId);
         if(!winEl) return;
         winEl.style.opacity = '1';
+        winEl.style.visibility = 'visible';
         winEl.style.pointerEvents = 'all';
         this.focus(winId);
     },
