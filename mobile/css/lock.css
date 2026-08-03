@@ -1,0 +1,184 @@
+/* ============================================================
+ * Lock screen CSS - AOD + PIN keypad
+ * Sits above every Android layer (statusbar 60, navbar 55,
+ * shade 50, apps 30, toast 90) at z-index 200.
+ * ============================================================ */
+
+.android-lock {
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+}
+
+.android-lock.is-hidden {
+    display: none;
+}
+
+/* ---- Always-On Display ---- */
+
+.android-aod {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: opacity 0.5s var(--android-ease);
+}
+
+.android-aod.is-fade {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.android-aod__time {
+    font-size: 66px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.android-aod__date {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* ---- PIN lock screen ---- */
+
+.android-lock__pin {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--android-statusbar-h) + 40px) 0 36px;
+    background: rgba(8, 10, 14, 0.42);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--android-ease);
+}
+
+.android-lock__pin.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.android-lock__pin.is-shaking {
+    animation: android-lock-shake 0.4s var(--android-ease);
+}
+
+@keyframes android-lock-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}
+
+.android-lock__info {
+    text-align: center;
+}
+
+.android-lock__time {
+    font-size: 72px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    line-height: 1.05;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.android-lock__date {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 6px;
+}
+
+.android-lock__auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.android-lock__hint {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    min-height: 18px;
+}
+
+.android-lock__hint.is-error {
+    color: #ff8a90;
+}
+
+.android-lock__dots {
+    display: flex;
+    gap: 14px;
+    min-height: 14px;
+}
+
+.android-lock__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    background: transparent;
+    transition: background 0.15s var(--android-ease), border-color 0.15s var(--android-ease);
+}
+
+.android-lock__dot.is-filled {
+    background: #fff;
+    border-color: #fff;
+}
+
+.android-lock__keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 72px);
+    gap: 12px;
+}
+
+.android-lock__key {
+    height: 68px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s var(--android-ease), transform 0.08s;
+}
+
+.android-lock__key:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.92);
+}
+
+.android-lock__key svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.android-lock__key--blank {
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .android-aod,
+    .android-lock__pin {
+        transition: none;
+    }
+    .android-lock__pin.is-shaking {
+        animation: none;
+    }
+}

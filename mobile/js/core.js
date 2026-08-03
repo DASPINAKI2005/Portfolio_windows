@@ -172,4 +172,11 @@
             day: 'numeric'
         });
     };
+
+    /** Formats seconds as m:ss for media time labels. */
+    U.formatDuration = function (seconds) {
+        const s = Math.max(0, Math.floor(seconds || 0));
+        const m = Math.floor(s / 60);
+        return m + ':' + (s % 60 < 10 ? '0' : '') + (s % 60);
+    };
 })(window);

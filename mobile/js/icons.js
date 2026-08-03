@@ -92,6 +92,18 @@
         play:
             '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>',
 
+        pause:
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>',
+
+        skipPrev:
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h2v14H7zM19 5v14L9.5 12z"/></svg>',
+
+        skipNext:
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 5h2v14h-2zM5 5v14l9.5-7z"/></svg>',
+
+        music:
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h5V3z"/></svg>',
+
         mic:
             '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11z"/></svg>',
 

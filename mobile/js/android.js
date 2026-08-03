@@ -24,6 +24,7 @@
         Android.Recents.init();
         Android.Apps.bind(Android.Shell.root);
         Android.Keyboard.init();
+        Android.Lock.lock();
     }
 
     /* ---------------------------------------------------------- */
@@ -34,6 +35,9 @@
         init: function () {
             document.addEventListener('keydown', function (e) {
                 if (!U.isMobile()) return;
+
+                // While locked, only the lock screen reacts.
+                if (Android.Lock.isLocked()) return;
 
                 if (e.key === 'Escape') {
                     if (Android.Shell.shadeOpen) {

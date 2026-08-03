@@ -171,6 +171,7 @@
                     '<span aria-hidden="true">' + I.spark + '</span>' +
                     '<input type="range" min="30" max="100" value="70" data-shade-brightness aria-label="Brightness">' +
                     '</div>' +
+                    Android.Media.render() +
                     '<div class="android-shade__notifs">' +
                     '<div class="android-notif">' + I.whatsapp +
                     '<div class="android-notif__body"><strong>WhatsApp</strong><span>New message from Recruiter</span></div></div>' +
@@ -180,6 +181,7 @@
             });
             this.screen.appendChild(shade);
             this.shade = shade;
+            Android.Media.bind(shade);
 
             shade.addEventListener('click', function (e) {
                 const toggle = e.target.closest('[data-toggle]');

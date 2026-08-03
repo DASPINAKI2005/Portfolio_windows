@@ -171,6 +171,257 @@
     height: 50px;
 }
 
+/* ============================================================
+ * T-009 - Folders, widgets and long-press drag
+ * ============================================================ */
+
+/* Drag/edit mode */
+.android-home__pages.is-dragging {
+    overflow-x: hidden;
+}
+
+.android-app-icon.is-dragging {
+    z-index: 50;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+}
+
+.android-app-icon.is-wiggling {
+    animation: android-wiggle 0.18s ease-in-out infinite;
+}
+
+@keyframes android-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg); }
+    75% { transform: rotate(2deg); }
+}
+
+.android-app-icon.is-drop-target {
+    outline: 2px solid rgba(96, 205, 255, 0.75);
+    border-radius: 18px;
+}
+
+/* Edit bar (drag targets) */
+.android-editbar {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 10px);
+    left: 12px;
+    right: 12px;
+    z-index: 30;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.android-editbar.is-visible {
+    display: flex;
+}
+
+.android-editbar__zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.35);
+    background: rgba(18, 18, 24, 0.55);
+    color: #fff;
+    font-size: 13px;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    pointer-events: auto;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.android-editbar__zone.is-drop-target {
+    background: rgba(255, 90, 90, 0.25);
+    border-color: #ff5a5a;
+}
+
+.android-editbar__trash svg {
+    width: 20px;
+    height: 20px;
+    fill: #ff8a90;
+    display: block;
+}
+
+.android-editbar__restore {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    pointer-events: auto;
+}
+
+.android-editbar__chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(18, 18, 24, 0.55);
+    color: #fff;
+    font-size: 12px;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+}
+
+.android-editbar__chip svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+/* Folder cell on the home grid */
+.android-folder__stack {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 3px 6px rgba(0, 0, 0, 0.35);
+    position: relative;
+}
+
+.android-folder__mini {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.android-folder__mini svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.android-folder__more {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 3px;
+    border-radius: 8px;
+    background: #1a73e8;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.android-home__dock .android-folder__stack {
+    width: 50px;
+    height: 50px;
+}
+
+/* Folder overlay */
+.android-folder-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+}
+
+.android-folder-overlay.is-hidden {
+    display: none;
+}
+
+.android-folder__sheet {
+    width: min(320px, 86%);
+    max-height: 74%;
+    background: rgba(28, 28, 34, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.android-folder__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.android-folder__name {
+    flex: 1;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.android-folder__rename {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    outline: none;
+}
+
+.android-folder__btn {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 12px;
+    flex: 0 0 auto;
+}
+
+.android-folder__btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.android-folder__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    overflow-y: auto;
+    padding: 4px 0;
+}
+
+.android-folder__grid .android-app-icon__glyph {
+    width: 48px;
+    height: 48px;
+}
+
+.android-folder__foot {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .android-app-icon.is-wiggling {
+        animation: none;
+    }
+}
+
 /* Wider viewports get more columns (tablet-sized emulation). */
 @media (min-width: 500px) {
     .android-home__page {

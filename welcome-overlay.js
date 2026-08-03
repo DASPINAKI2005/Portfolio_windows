@@ -37,8 +37,9 @@
     var title = document.getElementById('welcome-title');
     if (!overlay) return;
 
-    // Device detection via screen width (>=768px = Desktop/Laptop).
-    var isDesktop = window.innerWidth >= 768;
+    // Device detection via screen width. Matches the simulation gate in
+    // mobile/css/gate.css: desktop >= 1025px, Android <= 1024px.
+    var isDesktop = window.innerWidth >= 1025;
     if (title) {
         title.textContent = isDesktop
             ? 'Welcome to the Windows 11 Portfolio Experience'
