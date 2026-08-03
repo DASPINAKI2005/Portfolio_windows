@@ -182,3 +182,30 @@
         animation: none;
     }
 }
+
+/* Compact layout for landscape / short viewports. */
+@media (max-height: 520px) and (orientation: landscape) {
+    .android-aod__time {
+        font-size: 44px;
+    }
+    .android-lock__time {
+        font-size: 44px;
+    }
+    .android-lock__pin {
+        padding: calc(var(--android-statusbar-h) + 14px) 0 12px;
+    }
+    .android-lock__auth {
+        gap: 8px;
+    }
+    .android-lock__dots {
+        min-height: 10px;
+    }
+    .android-lock__keypad {
+        grid-template-columns: repeat(3, 56px);
+        gap: 8px;
+    }
+    .android-lock__key {
+        height: 48px;
+        font-size: 20px;
+    }
+}

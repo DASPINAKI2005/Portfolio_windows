@@ -112,6 +112,10 @@ const NETWORK_LINKS = [
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Mobile: the Android simulation owns this viewport. Do not boot the
+    // desktop engine (managers, wallpaper preloads, slideshow) on phones.
+    if (window.matchMedia('(max-width: 1024px)').matches) return;
+
     WallpaperManager.init();
     DesktopManager.init();
     TaskbarManager.init();
@@ -143,6 +147,8 @@ const WallpaperManager = {
     interval: null,
 
     init() {
+        if (window.matchMedia('(max-width: 1024px)').matches) return;
+
         for (let i = 0; i < 2; i++) {
             const layer = document.createElement('div');
             layer.className = 'wallpaper-layer';

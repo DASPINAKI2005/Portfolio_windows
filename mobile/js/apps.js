@@ -11,6 +11,7 @@
 
     const Android = (global.Android = global.Android || {});
     const I = Android.Icons;
+    const U = Android.Utils;
     const esc = Android.Utils.esc;
 
     /* ============================================================
@@ -38,9 +39,9 @@
     };
 
     const PROJECTS = [
-        { title: 'Nova — Local AI Chatbot', views: '4.2K', time: '2 days ago', dur: '3:24', c1: '#34d399', c2: '#0ea5e9' },
-        { title: 'Real-Time Object Detection Web App', views: '12K', time: '1 week ago', dur: '4:58', c1: '#60a5fa', c2: '#a78bfa' },
-        { title: 'The Eighth Wonder — AI Project Idea Generator', views: '2.1K', time: '3 weeks ago', dur: '6:12', c1: '#f472b6', c2: '#fb923c' }
+        { title: 'Nova — Local AI Chatbot', views: '4.2K', time: '2 days ago', dur: '3:24', c1: '#34d399', c2: '#0ea5e9', repo: 'https://github.com/DASPINAKI2005?tab=repositories' },
+        { title: 'Real-Time Object Detection Web App', views: '12K', time: '1 week ago', dur: '4:58', c1: '#60a5fa', c2: '#a78bfa', repo: 'https://github.com/DASPINAKI2005?tab=repositories' },
+        { title: 'The Eighth Wonder — AI Project Idea Generator', views: '2.1K', time: '3 weeks ago', dur: '6:12', c1: '#f472b6', c2: '#fb923c', repo: 'https://github.com/DASPINAKI2005?tab=repositories' }
     ];
 
     const SKILLS = [
@@ -98,15 +99,20 @@
         ]
     };
 
-    // TODO: Replace the simulated Resume.pdf preview with the real resume file
-    //       (e.g. mobile/media/Resume.pdf) when it is ready.
     const DRIVE_FILES = [
         { name: 'Resume.pdf', kind: 'pdf', meta: 'PDF · Updated today', src: 'assets/resume/Pinaki_Das_CV.pdf' },
         { name: 'Certificates', kind: 'folder', meta: 'Folder · 5 items' },
-        { name: 'Projects', kind: 'folder', meta: 'Folder · 3 items' },
-        { name: 'CoverLetter.docx', kind: 'doc', meta: 'DOCX · 45 KB' },
-        { name: 'Projects-2026.md', kind: 'doc', meta: 'MD · 8 KB' }
+        { name: 'Projects', kind: 'folder', meta: 'Folder · 3 items' }
     ];
+
+    const DRIVE_FOLDERS = {
+        Certificates: CERTS.map(function (c) {
+            return { name: c.name + '.pdf', kind: 'pdf', meta: c.org, src: c.pdf };
+        }),
+        Projects: PROJECTS.map(function (p) {
+            return { name: p.title, kind: 'link', meta: 'GitHub · ' + PROFILE.handle, href: p.repo };
+        })
+    };
 
     const RESUME = {
         summary: 'Aspiring AI Engineer and Computer Science undergraduate with a strong project-driven foundation in Python, LLMs, Prompt Engineering, and Retrieval-Augmented Generation (RAG).',
@@ -179,7 +185,7 @@
             '<button class="android-app__topbtn android-ripple-target" data-action="app-more" aria-label="More options">' + I.more + '</button>' +
             '</header>';
         return (
-            '<section class="android-app ' + theme + '" role="dialog" aria-label="' + esc(opts.title) + '" tabindex="-1"' +
+            '<section class="android-app ' + theme + '" role="dialog" aria-modal="true" aria-label="' + esc(opts.title) + '" tabindex="-1"' +
             ' data-app="' + esc(opts.appId) + '"' + accent + '>' +
             (opts.topbar || defaultTopbar) +
             '<div class="android-app__content">' + opts.content + '</div>' +
@@ -245,6 +251,7 @@
                 '<div class="youtube__player-info">' +
                 '<strong class="youtube__player-title"></strong>' +
                 '<span class="youtube__player-meta"></span>' +
+                '<button class="android-btn android-btn--sm android-ripple-target youtube__watch" data-action="open-project" data-idx="" aria-label="Open project on GitHub">' + I.github + '<span>View on GitHub</span></button>' +
                 '</div>' +
                 '<div class="youtube__controls"><div class="youtube__bar"><span></span></div></div>' +
                 '</div>'
@@ -252,6 +259,14 @@
     }
 
     function renderContacts() {
+        const CONTACT_LINKS = {
+            Phone: 'tel:' + PROFILE.phone,
+            Email: 'mailto:' + PROFILE.email,
+            Website: 'https://' + PROFILE.website,
+            Location: 'https://maps.google.com/?q=' + encodeURIComponent(PROFILE.location),
+            GitHub: 'https://' + PROFILE.github,
+            LinkedIn: 'https://' + PROFILE.linkedin
+        };
         const items = [
             { icon: I.phone, title: 'Phone', sub: PROFILE.phone },
             { icon: I.email, title: 'Email', sub: PROFILE.email },
@@ -259,13 +274,13 @@
             { icon: I.location, title: 'Location', sub: PROFILE.location },
             { icon: I.github, title: 'GitHub', sub: PROFILE.github },
             { icon: I.linkedin, title: 'LinkedIn', sub: PROFILE.linkedin }
-        ].map(function (item, i) {
+        ].map(function (item) {
             return (
-                '<li class="android-list__item android-ripple-target" data-action="contact-copy" data-label="' + esc(item.title) + '" tabindex="0" role="button" aria-label="Copy ' + esc(item.title) + '">' +
+                '<li class="android-list__item android-ripple-target" data-action="contact-open" data-link="' + esc(CONTACT_LINKS[item.title]) + '" data-label="' + esc(item.title) + '" tabindex="0" role="button" aria-label="Open ' + esc(item.title) + '">' +
                 '<span class="android-list__icon" style="--g:linear-gradient(135deg,#0ea5e9,#2563eb)">' + item.icon + '</span>' +
                 '<div class="android-list__body"><span class="android-list__title">' + esc(item.title) + '</span>' +
                 '<span class="android-list__sub">' + esc(item.sub) + '</span></div>' +
-                '<span class="android-list__meta">Copy</span>' +
+                '<button class="android-list__meta android-ripple-target" data-action="contact-copy" data-copy="' + esc(item.sub) + '" data-label="' + esc(item.title) + '" aria-label="Copy ' + esc(item.title) + '">Copy</button>' +
                 '</li>'
             );
         }).join('');
@@ -313,6 +328,11 @@
             }).join('');
             return (
                 '<div class="whatsapp__thread" data-thread="' + i + '" hidden>' +
+                '<header class="whatsapp__thread-head">' +
+                '<button class="android-app__topbtn android-ripple-target" data-action="whatsapp-back" aria-label="Back to chats">' + I.arrowBack + '</button>' +
+                '<div class="whatsapp__thread-who"><strong>' + esc(c.name) + '</strong><span>online</span></div>' +
+                '<button class="android-app__topbtn android-ripple-target" data-action="app-more" aria-label="More options">' + I.more + '</button>' +
+                '</header>' +
                 '<div class="whatsapp__msgs">' + msgs + '</div>' +
                 '<form class="whatsapp__input" data-form="whatsapp" data-thread="' + i + '">' +
                 '<button type="button" class="whatsapp__ico" aria-label="Emoji">' + I.smile + '</button>' +
@@ -395,6 +415,11 @@
         const detail = EMAILS.map(function (m, i) {
             return (
                 '<article class="gmail__detail" data-detail="' + i + '" hidden>' +
+                '<header class="gmail__detail-bar">' +
+                '<button class="android-app__topbtn android-ripple-target" data-action="gmail-close-detail" aria-label="Back to inbox">' + I.arrowBack + '</button>' +
+                '<span class="gmail__detail-bar-title">Inbox</span>' +
+                '<button class="android-app__topbtn android-ripple-target" data-action="app-more" aria-label="More options">' + I.more + '</button>' +
+                '</header>' +
                 '<header class="gmail__detail-head">' +
                 '<span class="gmail__sender gmail__sender--lg" style="--g:' + m.grad + '">' + esc(m.sender.charAt(0)) + '</span>' +
                 '<div><strong>' + esc(m.sender) + '</strong><span>to me · ' + esc(m.time) + '</span></div>' +
@@ -600,6 +625,9 @@
                 '<div class="insta__viewer" hidden>' +
                 '<button class="insta__viewer-close android-ripple-target" data-action="close-viewer" aria-label="Close photo">' + I.close + '</button>' +
                 '<div class="insta__viewer-stage" style="--g:linear-gradient(135deg,#60a5fa,#818cf8)"></div>' +
+                '<div class="insta__viewer-bar" hidden>' +
+                '<button class="android-btn android-btn--sm android-ripple-target" data-action="download-cert">' + I.download + '<span>Download certificate</span></button>' +
+                '</div>' +
                 '</div>'
         });
     }
@@ -633,10 +661,17 @@
                 '</div>' +
                 sectionTitle('Recent') +
                 '<ul class="drive__list">' + files + '</ul>' +
+                '<div class="drive__folder" hidden>' +
+                '<div class="drive__folder-bar">' +
+                '<button class="android-app__topbtn android-ripple-target" data-action="drive-folder-back" aria-label="Back to Drive home">' + I.arrowBack + '</button>' +
+                '<strong class="drive__folder-title" data-drive-folder-title></strong>' +
+                '</div>' +
+                '<ul class="drive__list drive__folder-list" data-drive-folder-list></ul>' +
+                '</div>' +
                 '<div class="drive__preview" hidden>' +
                 '<div class="drive__preview-bar">' +
                 '<button class="android-app__topbtn android-ripple-target" data-action="drive-close" aria-label="Back">' + I.arrowBack + '</button>' +
-                '<span>Resume.pdf</span>' +
+                '<span data-drive-preview-title>Resume.pdf</span>' +
                 '<button class="android-btn android-btn--sm android-ripple-target" data-action="drive-download">' + I.download + '<span>Download</span></button>' +
                 '</div>' +
                 '<div class="drive__page">' +
@@ -798,6 +833,46 @@
         Android.Utils.toast(message);
     }
 
+    function openDriveFolder(root, name) {
+        const items = DRIVE_FOLDERS[name] || [];
+        const list = root.querySelector('[data-drive-folder-list]');
+        root.querySelector('[data-drive-folder-title]').textContent = name;
+        list.innerHTML = items.map(function (f, i) {
+            const icon = f.kind === 'link' ? I.globe : I.drivePdf;
+            return (
+                '<li class="drive__file android-ripple-target" data-action="open-drive-folder-item" data-folder="' + esc(name) + '" data-idx="' + i + '" tabindex="0" role="button" aria-label="Open ' + esc(f.name) + '">' +
+                '<span class="drive__file-ico drive__file-ico--' + f.kind + '">' + icon + '</span>' +
+                '<div class="drive__file-body"><strong>' + esc(f.name) + '</strong><span>' + esc(f.meta) + '</span></div>' +
+                '<span class="android-list__meta">' + (f.kind === 'link' ? 'Open' : 'Download') + '</span>' +
+                '</li>'
+            );
+        }).join('');
+        const folder = root.querySelector('.drive__folder');
+        folder.hidden = false;
+        setTimeout(function () {
+            folder.classList.add('is-open');
+        }, 10);
+    }
+
+    function openDriveFile(root, f) {
+        if (f.kind === 'link') {
+            if (f.href) U.open(f.href);
+            return;
+        }
+        const page = root.querySelector('.drive__page');
+        if (f.src) {
+            page.innerHTML = '<iframe src="' + esc(f.src) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>';
+        }
+        Android.Apps.state.driveFile = { name: f.name, src: f.src || '' };
+        const title = root.querySelector('[data-drive-preview-title]');
+        if (title) title.textContent = f.name;
+        const preview = root.querySelector('.drive__preview');
+        preview.hidden = false;
+        setTimeout(function () {
+            preview.classList.add('is-open');
+        }, 10);
+    }
+
     const ACTIONS = {
         'app-back': function () {
             Android.AppManager.back();
@@ -819,8 +894,17 @@
             root.querySelector('.youtube__stage').style.setProperty('--g', 'linear-gradient(135deg,' + v.c1 + ',' + v.c2 + ')');
             root.querySelector('.youtube__player-title').textContent = v.title;
             root.querySelector('.youtube__player-meta').textContent = v.views + ' views · ' + v.dur;
+            root.querySelector('.youtube__watch').dataset.idx = idx;
             root.querySelector('.youtube__player').hidden = false;
             root.querySelector('.youtube__player').classList.add('is-open');
+        },
+        'open-project': function (target) {
+            const idx = parseInt(target.dataset.idx, 10);
+            const v = PROJECTS[idx];
+            if (v && v.repo) {
+                U.open(v.repo);
+                showToast('Opening ' + v.title + ' on GitHub');
+            }
         },
         'close-video': function (target) {
             const root = findAppRoot(target);
@@ -828,21 +912,25 @@
             root.querySelector('.youtube__player').hidden = true;
             root.querySelector('.youtube__player').classList.remove('is-open');
         },
+        'contact-open': function (target) {
+            U.open(target.dataset.link);
+        },
         'contact-copy': function (target) {
+            const value = target.dataset.copy;
             const label = target.dataset.label;
-            const sub = target.querySelector('.android-list__sub');
-            if (sub) {
-                showToast(label + ' copied to clipboard');
-            }
+            if (!value) return;
+            U.copy(value, function (ok) {
+                showToast(ok ? label + ' copied to clipboard' : 'Could not copy ' + label);
+            });
         },
         'contact-call': function () {
-            showToast('Calling ' + PROFILE.phone + '...');
+            U.open('tel:' + PROFILE.phone);
         },
         'contact-sms': function () {
-            showToast('Opening WhatsApp to chat');
+            U.open('sms:' + PROFILE.phone);
         },
         'contact-mail': function () {
-            showToast('Opening mail app');
+            U.open('mailto:' + PROFILE.email);
         },
         'open-chat': function (target) {
             const root = findAppRoot(target);
@@ -897,6 +985,13 @@
                 d.hidden = d.dataset.detail !== idx;
             });
         },
+        'gmail-close-detail': function (target) {
+            const root = findAppRoot(target);
+            if (!root) return;
+            root.querySelectorAll('.gmail__detail').forEach(function (d) {
+                d.hidden = true;
+            });
+        },
         'chrome-refresh': function () {
             showToast('Page refreshed');
         },
@@ -937,13 +1032,30 @@
             const stage = root.querySelector('.insta__viewer-stage');
             stage.style.setProperty('--g', p.grad);
             const cert = idx < CERTS.length && CERTS[idx].pdf ? CERTS[idx] : null;
-            stage.innerHTML = cert
-                ? '<iframe src="' + esc(cert.pdf) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>'
-                : '';
+            if (cert) {
+                stage.dataset.download = cert.pdf;
+                stage.dataset.downloadName = cert.name + '.pdf';
+                stage.innerHTML = '<iframe src="' + esc(cert.pdf) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>';
+            } else {
+                delete stage.dataset.download;
+                delete stage.dataset.downloadName;
+                stage.innerHTML = '<div class="insta__viewer-placeholder"><strong>' + esc(p.name) + '</strong><span>Photo preview coming soon</span></div>';
+            }
+            const bar = root.querySelector('.insta__viewer-bar');
+            if (bar) bar.hidden = !cert;
             root.querySelector('.insta__viewer').hidden = false;
             setTimeout(function () {
                 root.querySelector('.insta__viewer').classList.add('is-open');
             }, 10);
+        },
+        'download-cert': function (target) {
+            const root = findAppRoot(target);
+            if (!root) return;
+            const stage = root.querySelector('.insta__viewer-stage');
+            if (stage.dataset.download) {
+                U.download(stage.dataset.downloadName, stage.dataset.download);
+                showToast('Downloading ' + stage.dataset.downloadName);
+            }
         },
         'insta-edit': function () {
             showToast('Edit profile');
@@ -966,18 +1078,28 @@
             if (!root) return;
             const idx = parseInt(target.dataset.idx, 10);
             const f = DRIVE_FILES[idx];
-            if (f.kind !== 'pdf') {
-                showToast('Opening ' + f.name + '...');
+            if (!f) return;
+            if (f.kind === 'folder') {
+                openDriveFolder(root, f.name);
                 return;
             }
-            const page = root.querySelector('.drive__page');
-            if (f.src) {
-                page.innerHTML = '<iframe src="' + esc(f.src) + '" style="width:100%;height:100%;border:0;display:block;background:#fff;"></iframe>';
-            }
-            root.querySelector('.drive__preview').hidden = false;
+            openDriveFile(root, f);
+        },
+        'drive-folder-back': function (target) {
+            const root = findAppRoot(target);
+            if (!root) return;
+            const folder = root.querySelector('.drive__folder');
+            folder.classList.remove('is-open');
             setTimeout(function () {
-                root.querySelector('.drive__preview').classList.add('is-open');
-            }, 10);
+                folder.hidden = true;
+            }, 220);
+        },
+        'open-drive-folder-item': function (target) {
+            const root = findAppRoot(target);
+            if (!root) return;
+            const items = DRIVE_FOLDERS[target.dataset.folder] || [];
+            const f = items[parseInt(target.dataset.idx, 10)];
+            if (f) openDriveFile(root, f);
         },
         'drive-close': function (target) {
             const root = findAppRoot(target);
@@ -989,7 +1111,11 @@
             }, 220);
         },
         'drive-download': function () {
-            showToast('Resume downloaded');
+            const f = Android.Apps.state.driveFile;
+            if (f && f.src) {
+                U.download(f.name, f.src);
+                showToast('Downloading ' + f.name);
+            }
         },
         'install-skill': function (target) {
             if (target.dataset.installed === 'true') {
@@ -1066,7 +1192,7 @@
         if (kind === 'google-search') {
             const q = form.querySelector('input').value.trim();
             if (q) {
-                showToast('Searching "' + q + '"');
+                U.open('https://www.google.com/search?q=' + encodeURIComponent(q));
                 form.reset();
             }
         }
@@ -1102,7 +1228,8 @@
 
     Android.Apps = {
         state: {
-            whatsappOpen: -1
+            whatsappOpen: -1,
+            driveFile: null
         },
         /** Shared portfolio content, also consumed by the desktop build. */
         data: {

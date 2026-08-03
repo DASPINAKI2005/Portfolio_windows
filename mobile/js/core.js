@@ -111,6 +111,93 @@
         });
     };
 
+    /** Opens an external URL in a new tab (reliable on mobile browsers). */
+    U.open = function (url) {
+        if (!url) return;
+        const a = U.create('a', {
+            href: url,
+            target: '_blank',
+            rel: 'noopener noreferrer'
+        });
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    };
+
+    /** Triggers a download. Pass either a same-origin href or raw text content. */
+    U.download = function (name, href, content) {
+        if (content != null) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            href = URL.createObjectURL(blob);
+        }
+        const a = U.create('a', { href: href, download: name });
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        if (content != null) setTimeout(function () { URL.revokeObjectURL(href); }, 1000);
+    };
+
+    /** Copies text to the clipboard with a fallback for insecure contexts. */
+    U.copy = function (text, done) {
+        const fallback = function () {
+            const ta = U.create('textarea', { value: text });
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) {}
+            ta.remove();
+            if (done) done(ok);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+                if (done) done(true);
+            }, fallback);
+        } else {
+            fallback();
+        }
+    };
+
+    /** Traps Tab focus inside a modal overlay. Returns a release function. */
+    U.trapFocus = function (container) {
+        if (!container || container.getAttribute('data-trap-active') === '1') return function () {};
+        container.setAttribute('data-trap-active', '1');
+        const focusables = function () {
+            const els = container.querySelectorAll(
+                'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])'
+            );
+            return Array.prototype.filter.call(els, function (el) {
+                return el.offsetParent !== null || el === document.activeElement;
+            });
+        };
+        const onKey = function (e) {
+            if (e.key !== 'Tab') return;
+            const els = focusables();
+            if (!els.length) {
+                e.preventDefault();
+                return;
+            }
+            const first = els[0];
+            const last = els[els.length - 1];
+            const active = document.activeElement;
+            if (e.shiftKey && (active === first || !container.contains(active))) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && (active === last || !container.contains(active))) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+        container.addEventListener('keydown', onKey);
+        return function () {
+            container.removeEventListener('keydown', onKey);
+            container.removeAttribute('data-trap-active');
+        };
+    };
+
     /** Global snackbar shown inside the phone screen. */
     U.toast = function (message) {
         const root = document.getElementById('android-root');
@@ -179,4 +266,29 @@
         const m = Math.floor(s / 60);
         return m + ':' + (s % 60 < 10 ? '0' : '') + (s % 60);
     };
+
+    /* ------------------------------------------------------------
+     * Software keyboard handling
+     * Shrinks #android-root to the visual viewport when the on-screen
+     * keyboard opens so the navbar + focused input stay visible.
+     * ------------------------------------------------------------ */
+    (function () {
+        const root = document.getElementById('android-root');
+        const vv = global.visualViewport;
+        if (!root || !vv) return;
+        const KB_GAP = 140;
+        const sync = U.throttle(function () {
+            const gap = global.innerHeight - vv.height;
+            const open = gap >= KB_GAP;
+            root.classList.toggle('android-kb-open', open);
+            if (open) {
+                root.style.setProperty('--android-vp-h', Math.max(200, vv.height) + 'px');
+            } else {
+                root.style.removeProperty('--android-vp-h');
+            }
+        }, 80);
+        vv.addEventListener('resize', sync);
+        vv.addEventListener('scroll', sync);
+        sync();
+    })();
 })(window);

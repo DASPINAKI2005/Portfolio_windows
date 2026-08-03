@@ -75,6 +75,10 @@
                 if (key) Lock.pressKey(key.dataset.key);
             });
 
+            this.pinEl.setAttribute('role', 'dialog');
+            this.pinEl.setAttribute('aria-modal', 'true');
+            this.pinEl.setAttribute('aria-label', 'Lock screen PIN entry');
+
             this.root.appendChild(this.aodEl);
             this.root.appendChild(this.pinEl);
             screen.appendChild(this.root);
@@ -121,6 +125,7 @@
             this.aodEl.classList.remove('is-fade');
             this.pinEl.classList.remove('is-visible');
             this.root.classList.remove('is-hidden');
+            this.releaseTrap = U.trapFocus(this.pinEl);
         },
 
         /** Transitions AOD -> PIN lock screen. */
@@ -129,6 +134,8 @@
             this.resetState();
             this.aodEl.classList.add('is-fade');
             this.pinEl.classList.add('is-visible');
+            const btn = this.pinEl.querySelector('.android-lock__key');
+            if (btn) btn.focus();
         },
 
         resetState: function () {
@@ -194,6 +201,10 @@
                 sessionStorage.setItem('android_pin_hint_seen', '1');
             } catch (e) {}
             if (!this.root) return;
+            if (this.releaseTrap) {
+                this.releaseTrap();
+                this.releaseTrap = null;
+            }
             this.root.classList.add('is-hidden');
         },
 

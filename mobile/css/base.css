@@ -14,7 +14,7 @@
     --android-bg: #0b0b0d;
     --android-surface: #16161a;
     --android-text: #e9eaec;
-    --android-text-dim: rgba(235, 238, 245, 0.72);
+    --android-text-dim: rgba(235, 238, 245, 0.82);
     --android-divider: rgba(255, 255, 255, 0.08);
     --android-ripple-color: rgba(255, 255, 255, 0.65);
 
@@ -34,6 +34,20 @@
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-select: none;
+}
+
+/* Software keyboard open: shrink to the visual viewport height so the
+   navbar and focused input stay above the keyboard. */
+#android-root.android-kb-open {
+    height: var(--android-vp-h, 100vh);
+}
+
+/* Landscape / short viewports: slim the chrome so apps keep breathing room. */
+@media (max-height: 520px) and (orientation: landscape) {
+    #android-root {
+        --android-statusbar-h: 24px;
+        --android-navbar-h: 42px;
+    }
 }
 
 /* The phone screen fills the frame; content is layered inside. */
@@ -604,4 +618,38 @@
 .android-toast--out {
     opacity: 0;
     transform: translate(-50%, 18px);
+}
+
+/* ------------------------------------------------------------
+   Accessibility
+   ------------------------------------------------------------ */
+
+/* Minimum touch-target size (48px) for interactive controls. */
+#android-root .android-nav-btn,
+#android-root .android-app__topbtn,
+#android-root .android-shade__edit,
+#android-root .whatsapp__ico,
+#android-root .whatsapp__send,
+#android-root .insta__viewer-btn,
+#android-root .insta__viewer-close,
+#android-root .android-shade__media-clear,
+#android-root .android-recents__close,
+#android-root .insta__story-ring,
+#android-root .google__chip,
+#android-root .store__chip {
+    min-width: 48px;
+    min-height: 48px;
+}
+
+/* Meaningful text should be selectable (contacts, bio, mail, chats). */
+#android-root .android-list__sub,
+#android-root .contacts__hero p,
+#android-root .gmail__detail-body,
+#android-root .gmail__snippet,
+#android-root .whatsapp__bubble,
+#android-root .google__about p,
+#android-root .chrome__page,
+#android-root .android-folder__foot {
+    user-select: text;
+    -webkit-user-select: text;
 }

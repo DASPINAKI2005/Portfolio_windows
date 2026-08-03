@@ -54,3 +54,12 @@
         display: none !important;
     }
 }
+
+@media (max-width: 560px) {
+    /* Small phones: the Android screen covers the whole viewport, so the
+       desktop wallpaper behind it is invisible. Skip loading it. */
+    body {
+        background-image: none;
+        background-color: #000;
+    }
+}

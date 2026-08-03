@@ -47,6 +47,38 @@
     pointer-events: none;
 }
 
+/* App launch splash (colored screen + icon pop). */
+.android-splash {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.24s var(--android-ease), transform 0.24s var(--android-ease);
+}
+
+.android-splash__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.16);
+    animation: android-splash-pop 0.4s var(--android-spring) both;
+}
+
+.android-splash__icon svg {
+    width: 44px;
+    height: 44px;
+}
+
+.android-splash.is-done {
+    opacity: 0;
+    transform: scale(1.06);
+}
+
 .android-app__topbar {
     flex: 0 0 auto;
     height: 52px;
@@ -186,17 +218,33 @@
 .android-list__sub {
     display: block;
     font-size: 13px;
-    color: rgba(17, 17, 20, 0.6);
+    color: rgba(17, 17, 20, 0.78);
 }
 
 .android-app--dark .android-list__sub {
-    color: rgba(233, 234, 236, 0.6);
+    color: rgba(233, 234, 236, 0.8);
 }
 
 .android-list__meta {
     font-size: 12px;
-    color: rgba(17, 17, 20, 0.55);
+    color: rgba(17, 17, 20, 0.72);
     flex: 0 0 auto;
+}
+
+.android-list__item > .android-list__meta.android-list__meta--btn,
+button.android-list__meta {
+    border: none;
+    background: transparent;
+    padding: 6px 10px;
+    margin-right: 4px;
+    border-radius: 14px;
+    font: inherit;
+    font-size: 12px;
+    color: #1a73e8;
+}
+
+button.android-list__meta:active {
+    background: rgba(26, 115, 232, 0.12);
 }
 
 .android-btn {
@@ -534,7 +582,7 @@
 
 .youtube__player-meta {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.82);
 }
 
 .youtube__controls {
@@ -554,6 +602,13 @@
     width: 34%;
     background: #ff0033;
     border-radius: 2px;
+}
+
+.youtube__watch {
+    align-self: flex-start;
+    margin-top: 8px;
+    color: #111;
+    background: rgba(255, 255, 255, 0.92);
 }
 
 /* ============================================================
@@ -662,7 +717,7 @@
 
 .whatsapp__time time {
     font-size: 11px;
-    color: rgba(17, 17, 20, 0.55);
+    color: rgba(17, 17, 20, 0.72);
 }
 
 .whatsapp__badge {
@@ -685,6 +740,37 @@
     display: flex;
     flex-direction: column;
     background: linear-gradient(rgba(239, 234, 226, 0.92), rgba(239, 234, 226, 0.92)), repeating-linear-gradient(45deg, #dfd8cf 0 2px, transparent 2px 12px);
+}
+
+.whatsapp__thread-head {
+    flex: 0 0 auto;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    background: #f0f2f5;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.whatsapp__thread-who {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.whatsapp__thread-who strong {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.whatsapp__thread-who span {
+    font-size: 11px;
+    color: rgba(17, 17, 20, 0.72);
 }
 
 .whatsapp__msgs {
@@ -716,7 +802,7 @@
 
 .whatsapp__bubble time {
     font-size: 10px;
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, 0.62);
     margin-left: 8px;
 }
 
@@ -1044,7 +1130,7 @@
 
 .gmail__snippet {
     font-size: 13px;
-    color: #5f6368;
+    color: #3c4043;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1057,6 +1143,21 @@
     background: #fff;
     padding: 8px 16px 24px;
     overflow-y: auto;
+}
+
+.gmail__detail-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -8px -16px 12px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.gmail__detail-bar-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .gmail__detail-head {
@@ -1073,7 +1174,7 @@
 
 .gmail__detail-head div span {
     font-size: 12px;
-    color: #5f6368;
+    color: #3c4043;
 }
 
 .gmail__detail-subject {
@@ -1431,6 +1532,42 @@
     flex: 1;
     background: var(--g);
     background-size: cover;
+    position: relative;
+}
+
+.insta__viewer-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    color: #fff;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.insta__viewer-placeholder strong {
+    font-size: 16px;
+}
+
+.insta__viewer-placeholder span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.insta__viewer-bar {
+    display: flex;
+    justify-content: center;
+    padding: 12px 16px 20px;
+    background: #000;
+}
+
+.insta__viewer-bar .android-btn {
+    color: #111;
+    background: #fff;
 }
 
 .insta__viewer-close {
@@ -1761,6 +1898,53 @@
     list-style: none;
 }
 
+.drive__folder {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.3s var(--android-ease);
+}
+
+.drive__folder.is-open {
+    transform: none;
+}
+
+.drive__folder-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.drive__folder-title {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drive__folder-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.drive__file-ico--link {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.drive__file-ico--link svg {
+    fill: currentColor;
+}
+
 .drive__file {
     display: flex;
     align-items: center;
@@ -1827,7 +2011,7 @@
 
 .drive__file-body span {
     font-size: 12px;
-    color: #5f6368;
+    color: #3c4043;
 }
 
 .drive__preview {

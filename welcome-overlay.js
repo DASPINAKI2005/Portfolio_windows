@@ -14,8 +14,8 @@
     'use strict';
 
     var STORAGE_KEY = 'welcome-overlay-seen';
-    var HOLD_MS = 3000;  // time the overlay stays fully visible
-    var FADE_MS = 600;   // fade in / fade out duration
+    var HOLD_MS = 2000;  // time the overlay stays fully visible
+    var FADE_MS = 450;   // fade in / fade out duration
 
     var overlay = document.getElementById('welcome-overlay');
 

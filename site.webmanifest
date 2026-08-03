@@ -1,0 +1,17 @@
+{
+  "name": "Pinaki Das — Portfolio",
+  "short_name": "Pinaki Das",
+  "description": "Interactive portfolio of Pinaki Das — Aspiring AI Engineer. Windows 11 desktop and Android phone simulations.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0078d4",
+  "icons": [
+    {
+      "src": "assets/icons/this-pc.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

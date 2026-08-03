@@ -97,7 +97,7 @@
         },
 
         /* ---------------------------------------------------------- */
-        /* Navigation bar (3-button)                                  */
+        /* Navigation bar (back / home / overview / lock)             */
 
         buildNavbar: function () {
             const bar = U.create('nav', {
@@ -135,6 +135,8 @@
                 Android.AppManager.goHome();
             } else if (action === 'nav-overview') {
                 Android.Recents.toggle();
+            } else if (action === 'nav-lock') {
+                Android.Lock.lock();
             }
         },
 

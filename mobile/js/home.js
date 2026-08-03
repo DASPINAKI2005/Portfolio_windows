@@ -518,16 +518,24 @@
             this.getOverlay();
             this.renderOverlay(folder);
             this.overlay.classList.remove('is-hidden');
+            this.releaseTrap = U.trapFocus(this.overlay);
         },
 
         closeFolder: function () {
             if (this.overlay) this.overlay.classList.add('is-hidden');
+            if (this.releaseTrap) {
+                this.releaseTrap();
+                this.releaseTrap = null;
+            }
             this.currentFolder = null;
         },
 
         getOverlay: function () {
             if (this.overlay) return this.overlay;
             const overlay = U.create('div', { class: 'android-folder-overlay is-hidden' });
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', 'Folder');
             overlay.innerHTML =
                 '<div class="android-folder__sheet">' +
                 '<div class="android-folder__head">' +
