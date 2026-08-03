@@ -17,7 +17,8 @@ const AppIcons = {
     notepad: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='2' width='18' height='20' rx='2.5' fill='%231E6F9F'/><path d='M6 7h12v2H6zm0 4h12v2H6zm0 4h8v2H6z' fill='%23fff' opacity='.85'/></svg>",
     calc: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='4' y='2' width='16' height='20' rx='2.5' fill='%232D6A4F'/><rect x='8' y='4.5' width='8' height='3.5' fill='%23fff' rx='.6'/><g fill='%23fff'><circle cx='8.5' cy='11.5' r='1.2'/><circle cx='12' cy='11.5' r='1.2'/><circle cx='15.5' cy='11.5' r='1.2'/><circle cx='8.5' cy='15.5' r='1.2'/><circle cx='12' cy='15.5' r='1.2'/><circle cx='15.5' cy='15.5' r='1.2'/><circle cx='8.5' cy='19.5' r='1.2'/><circle cx='12' cy='19.5' r='1.2'/><circle cx='15.5' cy='19.5' r='1.2'/></g></svg>",
     taskmgr: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='3' width='20' height='18' rx='2' fill='%230067C0'/><rect x='5' y='6' width='14' height='2' fill='%23fff' opacity='.7'/><path d='M6 16l3.2-4 2.6 2.4L17 8' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>",
-    settings: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19.4 13c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.06-1.6-2-3.46-2.43 1a7.6 7.6 0 0 0-2.93-1.7L13.5 2h-3l-.6 3.24a7.6 7.6 0 0 0-2.93 1.7l-2.43-1-2 3.46L4.6 11c-.04.33-.06.66-.06 1s.02.67.06 1l-2.06 1.6 2 3.46 2.43-1a7.6 7.6 0 0 0 2.93 1.7L10.5 22h3l.6-3.24a7.6 7.6 0 0 0 2.93-1.7l2.43 1 2-3.46L19.4 13zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z' fill='%23F2F2F2'/></svg>"
+    settings: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19.4 13c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.06-1.6-2-3.46-2.43 1a7.6 7.6 0 0 0-2.93-1.7L13.5 2h-3l-.6 3.24a7.6 7.6 0 0 0-2.93 1.7l-2.43-1-2 3.46L4.6 11c-.04.33-.06.66-.06 1s.02.67.06 1l-2.06 1.6 2 3.46 2.43-1a7.6 7.6 0 0 0 2.93 1.7L10.5 22h3l.6-3.24a7.6 7.6 0 0 0 2.93-1.7l2.43 1 2-3.46L19.4 13zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z' fill='%23F2F2F2'/></svg>",
+    about: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%232563EB'/><circle cx='12' cy='9.2' r='3.4' fill='%23fff'/><path d='M5.5 20.4c1.5-3.4 4.4-5 6.5-5s5 1.6 6.5 5' fill='none' stroke='%23fff' stroke-width='1.7' stroke-linecap='round'/></svg>"
 };
 
 // --- Uploaded documents (resume + certificates) ---
@@ -41,6 +42,7 @@ const STATE = {
         { id: 'recycle', title: 'Recycle Bin', type: 'explorer', icon: Icons.trash, initialX: 0, initialY: 2, keywords: 'trash deleted' },
         { id: 'cert', title: 'Certificate', type: 'folder', icon: Icons.folder, initialX: 0, initialY: 3, keywords: 'certificates courses coursera aws linux' },
         { id: 'resume', title: 'Resume.pdf', type: 'pdf', icon: Icons.pdf, pdf: RESUME_FILE, initialX: 0, initialY: 4, keywords: 'cv resume download document' },
+        { id: 'about', title: 'About Me', type: 'app', icon: AppIcons.about, initialX: 0, initialY: 5, keywords: 'about me profile bio who is summary skills contact introduction' },
         { id: 'projects', title: 'Projects', type: 'folder', icon: Icons.folder, pinnedOnly: true, keywords: 'nova ai chatbot object detection eighth wonder' },
         { id: 'github', title: 'GitHub', type: 'explorer', icon: Icons.network, pinnedOnly: true, keywords: 'git profile repository' },
         { id: 'notepad', title: 'Notepad', type: 'app', icon: AppIcons.notepad, pinnedOnly: true, keywords: 'notes text editor write type pad' },
@@ -156,11 +158,9 @@ const WallpaperManager = {
             this.layers.push(layer);
         }
 
-        this.wallpapers.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
-
+        // Only the active wallpaper is loaded up front. Later slideshow
+        // wallpapers are fetched on demand inside next(), so first paint
+        // never pays for the whole (multi-megabyte) wallpaper set.
         let saved = null;
         try { saved = parseInt(localStorage.getItem('win11_wallpaper'), 10); } catch (e) {}
         if (!isNaN(saved) && saved >= 0 && saved < this.wallpapers.length) this.current = saved;
@@ -171,31 +171,48 @@ const WallpaperManager = {
         this.interval = setInterval(() => this.next(), 5000);
     },
 
-    next() {
-        const next = (this.current + 1) % this.wallpapers.length;
+    /** Crossfades to the given wallpaper once its image has decoded. */
+    swapTo(next, persist) {
         const from = this.layers[this.activeLayer];
         const to = this.layers[1 - this.activeLayer];
-        to.style.backgroundImage = `url("${this.wallpapers[next]}")`;
-        from.style.opacity = 0;
-        to.style.opacity = 1;
-        this.current = next;
-        this.activeLayer = 1 - this.activeLayer;
+        const src = this.wallpapers[next];
+        to.style.backgroundImage = `url("${src}")`;
+        const apply = () => {
+            from.style.opacity = 0;
+            to.style.opacity = 1;
+            this.current = next;
+            this.activeLayer = 1 - this.activeLayer;
+        };
+        // Wait for the bitmap before fading so the incoming layer is never
+        // momentarily empty; a short timeout keeps the slideshow moving
+        // even if the image cannot be decoded.
+        const img = new Image();
+        let done = false;
+        const finish = () => {
+            if (done) return;
+            done = true;
+            apply();
+        };
+        img.onload = finish;
+        img.onerror = finish;
+        img.src = src;
+        setTimeout(finish, 2500);
+        if (persist) {
+            // An explicit choice stops the default slideshow so the picked
+            // wallpaper stays put (Windows "choose wallpaper" behaviour).
+            if (this.interval) { clearInterval(this.interval); this.interval = null; }
+            try { localStorage.setItem('win11_wallpaper', String(next)); } catch (e) {}
+        }
+    },
+
+    next() {
+        this.swapTo((this.current + 1) % this.wallpapers.length, false);
     },
 
     /** Sets a specific wallpaper (used by Settings > Personalization). */
     set(index) {
         if (index < 0 || index >= this.wallpapers.length) return;
-        const from = this.layers[this.activeLayer];
-        const to = this.layers[1 - this.activeLayer];
-        to.style.backgroundImage = `url("${this.wallpapers[index]}")`;
-        from.style.opacity = 0;
-        to.style.opacity = 1;
-        this.current = index;
-        this.activeLayer = 1 - this.activeLayer;
-        // An explicit choice stops the default slideshow so the picked
-        // wallpaper stays put (Windows "choose wallpaper" behaviour).
-        if (this.interval) { clearInterval(this.interval); this.interval = null; }
-        try { localStorage.setItem('win11_wallpaper', String(index)); } catch (e) {}
+        this.swapTo(index, true);
     }
 };
 
@@ -572,6 +589,16 @@ const WindowManager = {
                     this.openCert(certItem.dataset.cert);
                     return;
                 }
+                const projItem = e.target.closest('[data-project]');
+                if (projItem) {
+                    this.openProject(parseInt(projItem.dataset.project, 10));
+                    return;
+                }
+                const pjGitHub = e.target.closest('[data-pj-github]');
+                if (pjGitHub) {
+                    window.open(pjGitHub.dataset.pjGithub, '_blank', 'noopener');
+                    return;
+                }
                 const navFolder = e.target.closest('[data-nav-folder]');
                 if (navFolder) {
                     this.navigateFolder(navFolder.closest('.window'), navFolder.dataset.navFolder);
@@ -613,6 +640,16 @@ const WindowManager = {
                     a.remove();
                 }
             });
+
+            // Keyboard activation for explorer items (Enter / Space), so the
+            // file system stays fully usable without a mouse.
+            this.container.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                const t = e.target.closest('[data-project], [data-cert], [data-open-app], [data-nav-folder], [data-restore]');
+                if (!t) return;
+                e.preventDefault();
+                t.click();
+            });
         }
     },
 
@@ -653,7 +690,9 @@ const WindowManager = {
             const backBtn = winEl.querySelector('[data-nav-back]');
             if (backBtn) backBtn.style.visibility = 'hidden';
         } else if (appData.id === 'projects') {
-            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderFsItems(this.fsDirs.projects.items()));
+            contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderFsItems(this.fsDirs.projects.items()), null, false, 'explorer-main--projects');
+        } else if (appData.type === 'project') {
+            contentArea.innerHTML = this.renderProjectDetail(appData);
         } else if (appData.id === 'github') {
             contentArea.innerHTML = this.renderExplorerFrame(appData, this.renderGitHubBody());
         } else if (appData.id === 'recycle') {
@@ -682,10 +721,13 @@ const WindowManager = {
         winEl.addEventListener('mousedown', () => this.focus(winId));
 
         // Per-app window sizing for the built-in apps.
-        const SIZES = { notepad: [640, 480], calc: [340, 540], taskmgr: [680, 500], settings: [740, 520] };
+        const SIZES = { notepad: [640, 480], calc: [340, 540], taskmgr: [680, 500], settings: [740, 520], about: [880, 560] };
         if (SIZES[appData.id]) {
             winEl.style.width = SIZES[appData.id][0] + 'px';
             winEl.style.height = SIZES[appData.id][1] + 'px';
+        } else if (appData.type === 'project') {
+            winEl.style.width = '880px';
+            winEl.style.height = '600px';
         }
 
         // Built-in apps bind their own controls + timers.
@@ -885,12 +927,13 @@ const WindowManager = {
 
     /** Shared portfolio content reused from the mobile build (apps.js). */
     portfolioData() {
-        return (window.Android && Android.Apps && Android.Apps.data)
-            ? Android.Apps.data
+        const android = window.Android;
+        return (android && android.Apps && android.Apps.data)
+            ? android.Apps.data
             : { profile: {}, certs: [], resume: {} };
     },
 
-    renderExplorerFrame(appData, bodyHtml, path, backable) {
+    renderExplorerFrame(appData, bodyHtml, path, backable, mainClass) {
         const backArrow = backable
             ? '<button data-nav-back aria-label="Back" style="background:transparent;border:none;color:inherit;padding:4px;border-radius:4px;cursor:pointer;display:flex;align-items:center;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z"/></svg></button>'
             : '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 2L1 8l14 6V2z" opacity="0.5"/></svg>';
@@ -910,7 +953,7 @@ const WindowManager = {
                         <div class="nav-item">💻 This PC</div>
                         <div class="nav-item">🌐 Network</div>
                     </div>
-                    <div class="explorer-main">
+                    <div class="explorer-main ${mainClass || ''}">
                         ${bodyHtml}
                     </div>
                 </div>
@@ -939,6 +982,35 @@ const WindowManager = {
         if (cert && cert.pdf) {
             this.open({ id: 'cert-' + index, title: cert.name, type: 'pdf', icon: Icons.folder, pdf: cert.pdf });
         }
+    },
+
+    /** Opens the rich detail window for a portfolio project. */
+    openProject(index) {
+        const proj = (this.portfolioData().projects || [])[parseInt(index, 10)];
+        if (!proj) return;
+        this.open({ id: 'project-' + index, title: proj.title, type: 'project', index });
+    },
+
+    renderProjectDetail(appData) {
+        const p = (this.portfolioData().projects || [])[parseInt(appData.index, 10)] || {};
+        const stack = (p.stack || []).map(s => `<span class="pj-chip">${esc(s)}</span>`).join('');
+        const points = (p.points || []).map(pt => `<li>${esc(pt)}</li>`).join('');
+        return `
+            <div class="pj-page">
+                <div class="pj-hero" style="--pj-a:${p.c1 || '#60c8ff'};--pj-b:${p.c2 || '#0078d4'}">
+                    <div class="pj-hero__inner">
+                        <span class="pj-eyebrow">Featured project${p.views ? ' · ' + esc(p.views) + ' views' : ''}${p.time ? ' · ' + esc(p.time) : ''}</span>
+                        <h2 class="pj-title">${esc(p.title)}</h2>
+                        ${p.tagline ? `<p class="pj-tag">${esc(p.tagline)}</p>` : ''}
+                        ${p.repo ? `<div class="pj-actions"><button type="button" class="pj-btn pj-btn--primary" data-pj-github="${esc(p.repo)}">View on GitHub</button></div>` : ''}
+                    </div>
+                </div>
+                <div class="pj-body">
+                    ${p.desc ? `<section class="pj-sec"><h3>About this project</h3><p>${esc(p.desc)}</p></section>` : ''}
+                    ${stack ? `<section class="pj-sec"><h3>Tech stack</h3><div class="pj-chips">${stack}</div></section>` : ''}
+                    ${points ? `<section class="pj-sec"><h3>Key highlights</h3><ul class="pj-points">${points}</ul></section>` : ''}
+                </div>
+            </div>`;
     },
 
     /** Virtual file system (This PC). Files reference the same shared app registry / data. */
@@ -977,8 +1049,10 @@ const WindowManager = {
         projects: {
             path: 'This PC\\Projects',
             items() {
-                return (WindowManager.portfolioData().projects || []).map(p => ({
-                    kind: 'item', title: p.title, sub: p.views + ' views · ' + p.time, color1: p.c1, color2: p.c2
+                return (WindowManager.portfolioData().projects || []).map((p, i) => ({
+                    kind: 'project', index: i, title: p.title,
+                    sub: p.tagline || (p.views + ' views · ' + p.time),
+                    color1: p.c1, color2: p.c2, stack: p.stack || []
                 }));
             }
         }
@@ -990,6 +1064,22 @@ const WindowManager = {
 
     renderFsItems(items) {
         return items.map((item) => {
+            if (item.kind === 'project') {
+                const chips = (item.stack || []).slice(0, 4)
+                    .map(s => `<span class="pj-mini-chip">${esc(s)}</span>`).join('');
+                return `
+                    <div class="explorer-item explorer-item--project" data-project="${item.index}" role="button" tabindex="0" aria-label="Open project: ${esc(item.title)}">
+                        <div class="pj-card-thumb" style="--pj-a:${item.color1};--pj-b:${item.color2}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v12"/><path d="M12 14l-5-3v4.2A6 6 0 0 0 12 21a6 6 0 0 0 5-2.8V11z"/><circle cx="12" cy="2" r="2.2" fill="#fff" stroke="none"/></svg>
+                        </div>
+                        <div class="pj-card-body">
+                            <div class="explorer-item-name">${esc(item.title)}</div>
+                            ${item.sub ? `<div class="explorer-item-sub">${esc(item.sub)}</div>` : ''}
+                            ${chips ? `<div class="pj-card-chips">${chips}</div>` : ''}
+                        </div>
+                        <span class="pj-card-open">Open project</span>
+                    </div>`;
+            }
             if (item.kind === 'cert' || item.kind === 'item') {
                 const dataAttr = item.kind === 'cert' ? ` data-cert="${item.index}"` : '';
                 return `
@@ -1017,7 +1107,10 @@ const WindowManager = {
         const main = winEl.querySelector('.explorer-main');
         const pathEl = winEl.querySelector('.explorer-path');
         const back = winEl.querySelector('[data-nav-back]');
-        if (main) main.innerHTML = this.renderFsItems(dir.items());
+        if (main) {
+            main.innerHTML = this.renderFsItems(dir.items());
+            main.classList.toggle('explorer-main--projects', dirId === 'projects');
+        }
         if (pathEl) pathEl.textContent = dir.path;
         if (back) back.style.visibility = (winEl._fsStack || []).length <= 1 ? 'hidden' : 'visible';
     },
@@ -1171,8 +1264,68 @@ const WindowManager = {
             case 'calc': return this.renderCalculator(appData);
             case 'taskmgr': return this.renderTaskManager(appData);
             case 'settings': return this.renderSettings(appData);
+            case 'about': return this.renderAbout(appData);
             default: return '<div style="color: var(--text-secondary); font-size: 13px; padding: 16px;">App not available.</div>';
         }
+    },
+
+    renderAbout(appData) {
+        const data = this.portfolioData();
+        const profile = data.profile || {};
+        const resume = data.resume || {};
+        const skills = (data.skills || []).slice(0, 6);
+        const skillChips = skills.map(s => `
+            <div class="about-skill" style="--sk-g:${s.grad || 'linear-gradient(135deg,#60a5fa,#818cf8)'}">
+                <span class="about-skill__name">${esc(s.name)}</span>
+                <span class="about-skill__cat">${esc(s.cat)}</span>
+                <span class="about-skill__rate">${esc(s.rating || '')}</span>
+            </div>`).join('');
+        const contacts = [
+            { label: 'Email', value: profile.email, href: profile.email ? 'mailto:' + profile.email : null },
+            { label: 'Phone', value: profile.phone, href: profile.phone ? 'tel:' + profile.phone : null },
+            { label: 'Location', value: profile.location, href: null },
+            { label: 'GitHub', value: profile.github, href: profile.github ? 'https://' + profile.github : null },
+            { label: 'LinkedIn', value: profile.linkedin, href: profile.linkedin ? 'https://' + profile.linkedin : null }
+        ].map(c => c.href
+            ? `<a class="about-contact" href="${esc(c.href)}" target="_blank" rel="noopener"><span class="about-contact__label">${esc(c.label)}</span><span class="about-contact__value">${esc(c.value)}</span></a>`
+            : `<div class="about-contact"><span class="about-contact__label">${esc(c.label)}</span><span class="about-contact__value">${esc(c.value)}</span></div>`).join('');
+        const expItems = (resume.experience || []).map(e => `
+            <li class="about-list-item"><strong>${esc(e.role)}</strong><span>${esc(e.org)} · ${esc(e.years)}</span></li>`).join('');
+        const eduItems = (resume.education || []).slice(0, 2).map(e => `
+            <li class="about-list-item"><strong>${esc(e.degree)}</strong><span>${esc(e.org)} · ${esc(e.years)}</span></li>`).join('');
+        return `
+            <div class="about-page">
+                <aside class="about-rail">
+                    <div class="about-avatar" aria-hidden="true">${esc((profile.name || 'P').charAt(0))}</div>
+                    <h2 class="about-name">${esc(profile.name || 'Pinaki Das')}</h2>
+                    <p class="about-headline">${esc(profile.headline || '')}</p>
+                    <p class="about-tagline">${esc(profile.tagline || '')}</p>
+                    <div class="about-contacts">${contacts}</div>
+                    <div class="about-cta">
+                        <a class="about-btn" href="${esc(RESUME_FILE)}" download>Download Resume</a>
+                    </div>
+                </aside>
+                <div class="about-main">
+                    <section class="about-sec">
+                        <h3>About me</h3>
+                        <p class="about-bio">${esc(profile.bio || '')}</p>
+                    </section>
+                    <section class="about-sec">
+                        <h3>Skills</h3>
+                        <div class="about-skills">${skillChips}</div>
+                    </section>
+                    <section class="about-sec about-sec--split">
+                        <div>
+                            <h3>Experience</h3>
+                            <ul class="about-list">${expItems}</ul>
+                        </div>
+                        <div>
+                            <h3>Education</h3>
+                            <ul class="about-list">${eduItems}</ul>
+                        </div>
+                    </section>
+                </div>
+            </div>`;
     },
 
     renderNotepad(appData) {
@@ -2038,6 +2191,7 @@ const StartMenuManager = {
         // Populate pinned apps from the shared app registry (same apps as the desktop).
         const pinnedContainer = this.menuEl.querySelector('.pinned-apps');
         const pinnedList = [
+            { appId: 'about', name: 'About Me' },
             { appId: 'this-pc', name: 'This PC' },
             { appId: 'notepad', name: 'Notepad' },
             { appId: 'calc', name: 'Calculator' },
@@ -2163,10 +2317,58 @@ const WidgetsManager = {
 
     init() {
         this.panelEl = el('widgets-panel');
+        this.render();
 
         document.addEventListener('click', (e) => {
             if (this.isOpen && !this.panelEl.contains(e.target) && !el('widgets-btn').contains(e.target)) {
                 this.hide();
+            }
+        });
+    },
+
+    /** Builds the panel from shared portfolio content (profile, skills, projects). */
+    render() {
+        if (!this.panelEl) return;
+        const data = WindowManager.portfolioData();
+        const profile = data.profile || {};
+        const skills = data.skills || [];
+        const project = (data.projects || [])[0];
+        const topSkills = skills.slice(0, 4).map(s => `<span class="widget-chip">${esc(s.name)}</span>`).join('');
+        const initial = esc((profile.name || 'P').charAt(0));
+        this.panelEl.innerHTML = `
+            <div class="widgets-title">Widgets</div>
+            <div class="widget-card widget-card--profile">
+                <div class="widget-avatar" aria-hidden="true">${initial}</div>
+                <div class="widget-card-body">
+                    <div class="widget-card-head">${esc(profile.name || 'Pinaki Das')}</div>
+                    <div class="widget-card-sub">${esc(profile.role || profile.headline || '')}</div>
+                    <button type="button" class="widget-link" data-widget-about>View profile →</button>
+                </div>
+            </div>
+            <div class="widget-card">
+                <div class="widget-card-head">Skills spotlight</div>
+                <div class="widget-card-sub widget-card-chips">${topSkills || '<span class="widget-chip">Python</span>'}</div>
+            </div>
+            ${project ? `
+            <div class="widget-card">
+                <div class="widget-card-head">Latest project</div>
+                <div class="widget-card-sub">${esc(project.title)}</div>
+                <div class="widget-card-sub widget-project-tag">${esc(project.tagline || '')}</div>
+                <button type="button" class="widget-link" data-widget-project="0">Open project →</button>
+            </div>` : ''}
+        `;
+
+        this.panelEl.addEventListener('click', (e) => {
+            if (e.target.closest('[data-widget-about]')) {
+                this.hide();
+                const app = appById('about');
+                if (app) WindowManager.open(app);
+                return;
+            }
+            const proj = e.target.closest('[data-widget-project]');
+            if (proj) {
+                this.hide();
+                WindowManager.openProject(parseInt(proj.dataset.widgetProject, 10));
             }
         });
     },
@@ -2974,7 +3176,8 @@ const KeyboardShortcuts = {
         'notepad': 'notepad', 'notepad.exe': 'notepad',
         'calc': 'calc', 'calculator': 'calc', 'calc.exe': 'calc',
         'taskmgr': 'taskmgr', 'task manager': 'taskmgr', 'taskmgr.exe': 'taskmgr',
-        'settings': 'settings', 'ms-settings': 'settings', 'settings app': 'settings'
+        'settings': 'settings', 'ms-settings': 'settings', 'settings app': 'settings',
+        'about': 'about', 'about me': 'about', 'profile': 'about'
     },
 
     init() {
