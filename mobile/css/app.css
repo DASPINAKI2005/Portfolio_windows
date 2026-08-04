@@ -1535,7 +1535,6 @@ button.android-list__meta:active {
     position: relative;
 }
 
-.insta__viewer-placeholder,
 .insta__art {
     position: absolute;
     inset: 0;
@@ -1550,12 +1549,10 @@ button.android-list__meta:active {
     background: rgba(0, 0, 0, 0.35);
 }
 
-.insta__viewer-placeholder strong,
 .insta__art strong {
     font-size: 16px;
 }
 
-.insta__viewer-placeholder span,
 .insta__art-label {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.8);

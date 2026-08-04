@@ -744,6 +744,20 @@ const WindowManager = {
         TaskbarManager.addApp(appData, winId);
     },
 
+    /** Opens the Settings app (focusing the existing window if open) at a page. */
+    openSettingsPage(page) {
+        const app = appById('settings');
+        if (!app) return;
+        const existing = STATE.windows.get('settings');
+        if (existing) {
+            this.focus(existing.id);
+            const btn = existing.querySelector('[data-set-page="' + page + '"]');
+            if (btn) btn.click();
+            return;
+        }
+        this.open(Object.assign({}, app, { setPage: page || 'system' }));
+    },
+
     close(winId, appId) {
         const winEl = el(winId);
         if(!winEl) return;
@@ -1440,8 +1454,9 @@ const WindowManager = {
     },
 
     renderSettings(appData) {
+        const active = appData.setPage && this.SET_PAGES.indexOf(appData.setPage) !== -1 ? appData.setPage : 'system';
         const nav = this.SET_PAGES.map((p, i) => `
-            <button type="button" class="set-nav-item${i === 0 ? ' is-active' : ''}" data-set-page="${p}">
+            <button type="button" class="set-nav-item${p === active ? ' is-active' : ''}" data-set-page="${p}">
                 ${esc(this.SET_NAV[p])}
             </button>`).join('');
         return `
@@ -1449,7 +1464,7 @@ const WindowManager = {
                 <div class="set-layout">
                     <nav class="set-nav" aria-label="Settings categories">${nav}</nav>
                     <main class="set-body" data-set-body>
-                        ${this.renderSetPage('system')}
+                        ${this.renderSetPage(active)}
                     </main>
                 </div>
             </div>`;
@@ -2500,10 +2515,10 @@ const ContextMenuManager = {
                 if (data) this.openProperties(data);
                 break;
             case 'display-settings':
-                DesktopToast.show('Display settings are on the roadmap');
+                WindowManager.openSettingsPage('system');
                 break;
             case 'personalize':
-                DesktopToast.show('Personalization coming soon');
+                WindowManager.openSettingsPage('personalization');
                 break;
         }
     },
@@ -2677,6 +2692,7 @@ const QuickSettingsManager = {
                 <input type="range" min="30" max="100" value="${this.state.brightness}" data-slider="brightness" aria-label="Brightness">
                 <span class="qs-slider-val" data-val="brightness">${this.state.brightness}%</span>
             </div>
+            ${MediaPlayerManager.render()}
             <div class="qs-footer">
                 <span id="qs-battery">87%</span>
                 <button type="button" class="qs-edit" data-qs-settings aria-label="All settings">All settings</button>
@@ -2689,7 +2705,8 @@ const QuickSettingsManager = {
                 return;
             }
             if (e.target.closest('[data-qs-edit]')) {
-                DesktopToast.show('Quick settings editor coming soon');
+                this.hide();
+                WindowManager.openSettingsPage('personalization');
                 return;
             }
             if (e.target.closest('[data-qs-settings]')) {
@@ -2711,6 +2728,7 @@ const QuickSettingsManager = {
         document.body.appendChild(this.panelEl);
         this.renderActions();
         this.applyEffects();
+        MediaPlayerManager.bind(this.panelEl);
     },
 
     renderActions() {
@@ -2768,6 +2786,178 @@ const QuickSettingsManager = {
         if (!this.panelEl) return;
         this.panelEl.classList.add('hidden');
         this.isOpen = false;
+    }
+};
+
+// --- Media player (Quick Settings flyout) ---
+const MediaPlayerManager = {
+    index: 0,
+    pos: 0,
+    playing: false,
+    timer: null,
+    _card: null,
+
+    PLAYLIST: [
+        { title: 'Nova — Lo-Fi Focus', artist: 'Pinaki Das · AI Sessions', dur: 214, grad: 'linear-gradient(135deg,#34d399,#0ea5e9)' },
+        { title: 'Object Detection Beats', artist: 'Pinaki Das · AI Sessions', dur: 258, grad: 'linear-gradient(135deg,#60a5fa,#a78bfa)' },
+        { title: 'The Eighth Wonder', artist: 'Pinaki Das · Idea Synths', dur: 372, grad: 'linear-gradient(135deg,#f472b6,#fb923c)' },
+        { title: 'Pythonic Groove', artist: 'Pinaki Das · Idea Synths', dur: 186, grad: 'linear-gradient(135deg,#38bdf8,#10b981)' }
+    ],
+
+    ICONS: {
+        play: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>',
+        pause: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>',
+        prev: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6z"/></svg>',
+        next: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6v12z"/></svg>',
+        close: '<svg viewBox="0 0 10 10" width="10" height="10" fill="currentColor"><path d="M1,1 L9,9 M9,1 L1,9" stroke="currentColor" stroke-width="1.4"/></svg>',
+        music: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>'
+    },
+
+    track() { return this.PLAYLIST[this.index]; },
+
+    render() {
+        const t = this.track();
+        return `
+            <div class="qs-media" data-media-card>
+                <div class="qs-media__head">
+                    <span class="qs-media__art" style="--g:${t.grad}" aria-hidden="true">${this.ICONS.music}</span>
+                    <div class="qs-media__info">
+                        <strong data-media-title>${esc(t.title)}</strong>
+                        <span data-media-artist>${esc(t.artist)}</span>
+                    </div>
+                    <button type="button" class="qs-media__clear" data-media-action="clear" aria-label="Close player">${this.ICONS.close}</button>
+                </div>
+                <div class="qs-media__track" data-media-track role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                    <span class="qs-media__fill" data-media-fill><span class="qs-media__knob"></span></span>
+                </div>
+                <div class="qs-media__foot">
+                    <span class="qs-media__time" data-media-current>0:00</span>
+                    <div class="qs-media__controls">
+                        <button type="button" class="qs-media__btn" data-media-action="prev" aria-label="Previous track">${this.ICONS.prev}</button>
+                        <button type="button" class="qs-media__btn qs-media__btn--play" data-media-action="toggle" aria-label="Play or pause" aria-pressed="false">${this.ICONS.play}</button>
+                        <button type="button" class="qs-media__btn" data-media-action="next" aria-label="Next track">${this.ICONS.next}</button>
+                    </div>
+                    <span class="qs-media__time" data-media-duration>0:00</span>
+                </div>
+            </div>`;
+    },
+
+    bind(scope) {
+        this._card = scope.querySelector('[data-media-card]');
+        if (!this._card) return;
+        scope.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-media-action]');
+            if (!btn) return;
+            this.action(btn.dataset.mediaAction);
+        });
+        const trackEl = this._card.querySelector('[data-media-track]');
+        const seekFrom = (e) => {
+            const rect = trackEl.getBoundingClientRect();
+            const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
+            this.seek(rect.width ? x / rect.width : 0);
+        };
+        trackEl.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            if (trackEl.setPointerCapture) trackEl.setPointerCapture(e.pointerId);
+            seekFrom(e);
+        });
+        trackEl.addEventListener('pointermove', (e) => {
+            if (trackEl.hasPointerCapture && !trackEl.hasPointerCapture(e.pointerId)) return;
+            seekFrom(e);
+        });
+        trackEl.addEventListener('keydown', (e) => {
+            const step = e.key === 'ArrowRight' ? 5 : e.key === 'ArrowLeft' ? -5 : 0;
+            if (!step) return;
+            e.preventDefault();
+            this.seek((this.pos + step) / this.track().dur);
+        });
+        this.update();
+    },
+
+    action(name) {
+        if (name === 'toggle') this.toggle();
+        else if (name === 'next') this.next();
+        else if (name === 'prev') this.prev();
+        else if (name === 'clear') this.clear();
+    },
+
+    toggle() {
+        this.playing = !this.playing;
+        if (this.playing) this.startTicker();
+        else this.stopTicker();
+        this.update();
+    },
+
+    next() {
+        this.index = (this.index + 1) % this.PLAYLIST.length;
+        this.pos = 0;
+        this.update();
+    },
+
+    prev() {
+        if (this.pos > 3) { this.pos = 0; this.update(); return; }
+        this.index = (this.index - 1 + this.PLAYLIST.length) % this.PLAYLIST.length;
+        this.pos = 0;
+        this.update();
+    },
+
+    seek(frac) {
+        const t = this.track();
+        this.pos = Math.max(0, Math.min(t.dur - 1, Math.round(frac * t.dur)));
+        this.update();
+    },
+
+    clear() {
+        this.stopTicker();
+        this.playing = false;
+        this.index = 0;
+        this.pos = 0;
+        this.update();
+    },
+
+    startTicker() {
+        if (this.timer) return;
+        this.timer = setInterval(() => {
+            const t = this.track();
+            this.pos += 1;
+            if (this.pos >= t.dur) this.next();
+            else this.update();
+        }, 1000);
+    },
+
+    stopTicker() {
+        if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    },
+
+    fmt(s) {
+        const m = Math.floor(s / 60);
+        return m + ':' + String(s % 60).padStart(2, '0');
+    },
+
+    update() {
+        if (!this._card) return;
+        const t = this.track();
+        const frac = t.dur ? this.pos / t.dur : 0;
+        const fill = this._card.querySelector('[data-media-fill]');
+        if (fill) fill.style.width = (frac * 100) + '%';
+        const cur = this._card.querySelector('[data-media-current]');
+        if (cur) cur.textContent = this.fmt(this.pos);
+        const dur = this._card.querySelector('[data-media-duration]');
+        if (dur) dur.textContent = this.fmt(t.dur);
+        const title = this._card.querySelector('[data-media-title]');
+        if (title) title.textContent = t.title;
+        const artist = this._card.querySelector('[data-media-artist]');
+        if (artist) artist.textContent = t.artist;
+        const art = this._card.querySelector('.qs-media__art');
+        if (art) art.style.setProperty('--g', t.grad);
+        const playBtn = this._card.querySelector('[data-media-action="toggle"]');
+        if (playBtn) {
+            playBtn.innerHTML = this.playing ? this.ICONS.pause : this.ICONS.play;
+            playBtn.setAttribute('aria-pressed', String(this.playing));
+        }
+        const trackEl = this._card.querySelector('[data-media-track]');
+        if (trackEl) trackEl.setAttribute('aria-valuenow', String(Math.round(frac * 100)));
+        this._card.classList.toggle('is-playing', this.playing);
     }
 };
 

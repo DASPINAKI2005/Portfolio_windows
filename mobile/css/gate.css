@@ -33,8 +33,18 @@
     #taskbar,
     #start-menu,
     #widgets-panel,
+    #quick-settings,
+    #calendar-flyout,
+    #props-dialog,
     #context-menu,
     #selection-box,
+    #power-screen,
+    #desktop-toast,
+    #snap-preview,
+    #snap-layout,
+    #lock-screen,
+    .alt-tab-overlay,
+    .run-dialog,
     .wallpaper-layer {
         display: none !important;
     }
