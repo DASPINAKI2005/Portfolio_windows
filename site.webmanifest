@@ -8,7 +8,7 @@
   "theme_color": "#0078d4",
   "icons": [
     {
-      "src": "assets/icons/this-pc.png",
+      "src": "assets/images/icons/this-pc.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any"

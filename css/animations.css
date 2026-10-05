@@ -1,0 +1,269 @@
+/* ============================================================
+   KEYBOARD SHORTCUTS UI (Alt+Tab switcher + Run dialog)
+   ============================================================ */
+.alt-tab-overlay {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--taskbar-height) + 16px);
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--acrylic-bg);
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    z-index: 30000;
+    animation: altTabIn 0.18s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+@keyframes altTabIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.96); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+.alt-tab-card {
+    width: 120px;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+.alt-tab-card:hover { background: var(--hover-bg); }
+.alt-tab-card.is-active { background: var(--active-bg); border-color: var(--accent); }
+.alt-tab-thumb {
+    width: 96px;
+    height: 64px;
+    border-radius: 6px;
+    background: var(--mica-bg);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.alt-tab-thumb img { width: 32px; height: 32px; }
+.alt-tab-title {
+    font-size: 12px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.run-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 30000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 12vh;
+    background: rgba(0, 0, 0, 0.35);
+}
+.run-dialog[hidden] { display: none; }
+.run-dialog__box {
+    width: min(480px, 92vw);
+    border-radius: 8px;
+    background: var(--mica-bg);
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--window-shadow);
+    overflow: hidden;
+    animation: runDialogIn 0.18s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+@keyframes runDialogIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.run-dialog__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 10px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+.run-dialog__head .ctrl-btn { width: 32px; height: 28px; }
+.run-dialog__body { padding: 16px; }
+.run-dialog__row { display: flex; align-items: center; gap: 12px; }
+.run-dialog__row label { font-size: 13px; color: var(--text-secondary); flex: 0 0 auto; }
+.run-dialog__row input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    user-select: text;
+    -webkit-user-select: text;
+}
+.run-dialog__row input:focus { border-color: var(--accent); }
+.run-dialog__foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+}
+.run-dialog__foot button {
+    min-width: 84px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+.run-dialog__foot button:hover { background: var(--active-bg); }
+.run-dialog__ok { background: var(--accent-dark) !important; border-color: transparent !important; }
+
+@media (prefers-reduced-motion: reduce) {
+    .alt-tab-overlay,
+    .run-dialog__box {
+        animation-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================================
+   WELCOME OVERLAY (new section)
+   Premium glassmorphism welcome screen shown once per session.
+   Sits above every layer (desktop taskbar z:10000, context menu
+   z:10001, Android sim layers z<=90) and reuses the existing
+   Fluent design tokens (--mica-bg, --accent, --border-color,
+   --text-primary, --text-secondary, Segoe UI typeface) so it
+   feels like a native part of the portfolio.
+   ============================================================ */
+#welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(12, 14, 20, 0.5);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+#welcome-overlay.is-visible { opacity: 1; }
+
+#welcome-overlay.is-leaving { opacity: 0; }
+
+.welcome-card {
+    position: relative;
+    width: 100%;
+    max-width: min(560px, 92vw);
+    text-align: center;
+    padding: clamp(30px, 6vw, 56px) clamp(24px, 7vw, 72px);
+    border-radius: 28px;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)), var(--mica-bg);
+    border: 1px solid var(--border-color);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 24px 64px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(96, 205, 255, 0.22);
+    transform: scale(0.9);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+#welcome-overlay.is-visible .welcome-card { transform: scale(1); }
+
+.welcome-badge {
+    position: relative;
+    width: clamp(56px, 12vw, 76px);
+    height: clamp(56px, 12vw, 76px);
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(26px, 6vw, 34px);
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #60c8ff, #2563eb);
+    box-shadow:
+        0 0 0 4px rgba(96, 205, 255, 0.18),
+        0 12px 30px rgba(37, 99, 235, 0.5),
+        0 0 44px rgba(96, 205, 255, 0.35);
+}
+
+.welcome-card__glow {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    width: 75%;
+    height: 60%;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(96, 205, 255, 0.45), transparent);
+    filter: blur(20px);
+    pointer-events: none;
+}
+
+.welcome-title {
+    position: relative;
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(20px, 5vw, 34px);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-primary);
+    text-shadow: 0 0 28px rgba(96, 205, 255, 0.5);
+}
+
+.welcome-role {
+    position: relative;
+    margin: 10px 0 0;
+    font-size: clamp(11px, 2.8vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.welcome-subtitle {
+    position: relative;
+    margin: 10px 0 0;
+    font-size: clamp(12px, 3vw, 15px);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+/* Disable page scrolling while the welcome overlay is visible */
+.welcome-lock,
+.welcome-lock body {
+    overflow: hidden !important;
+}
+
+/* Mobile-first sizing tweak */
+@media (max-width: 767px) {
+    .welcome-card {
+        padding: 32px 26px;
+        border-radius: 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #welcome-overlay,
+    .welcome-card {
+        transition-duration: 0.01ms !important;
+    }
+}
+

@@ -8,7 +8,7 @@
  * - Locks page scroll while visible.
  *
  * Self-contained and fully independent of the Windows / Android
- * simulations and the existing desktop engine in script.js.
+ * simulations and the existing desktop engine in js/main.js.
  */
 (function () {
     'use strict';

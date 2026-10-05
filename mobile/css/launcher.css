@@ -1,0 +1,441 @@
+/* ============================================================
+ * Recents / Overview CSS - stacked app cards, swipe to dismiss
+ * All selectors are namespaced under #android-root / .android-*
+ * ============================================================ */
+
+.android-recents {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(6, 6, 8, 0.6);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    transition: opacity 0.24s var(--android-ease), visibility 0.24s;
+}
+
+.android-recents.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+}
+
+.android-recents__head {
+    position: absolute;
+    top: calc(var(--android-statusbar-h) + 8px);
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--android-text);
+    pointer-events: none;
+}
+
+.android-recents__list {
+    position: absolute;
+    inset: calc(var(--android-statusbar-h) + 52px) 0 calc(var(--android-navbar-h) + 14px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.android-recents__card {
+    position: relative;
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 11;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 20px;
+    background: var(--g, #26262c);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.android-recents.is-open .android-recents__card {
+    animation: android-recents-card-in 0.36s var(--android-spring) both;
+}
+
+.android-recents.is-open .android-recents__card:nth-child(1) { animation-delay: 0.02s; }
+.android-recents.is-open .android-recents__card:nth-child(2) { animation-delay: 0.06s; }
+.android-recents.is-open .android-recents__card:nth-child(3) { animation-delay: 0.1s; }
+.android-recents.is-open .android-recents__card:nth-child(4) { animation-delay: 0.14s; }
+.android-recents.is-open .android-recents__card:nth-child(5) { animation-delay: 0.18s; }
+.android-recents.is-open .android-recents__card:nth-child(6) { animation-delay: 0.22s; }
+.android-recents.is-open .android-recents__card:nth-child(n + 7) { animation-delay: 0.26s; }
+
+.android-recents__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.55) 78%);
+}
+
+.android-recents__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+}
+
+.android-recents__close svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.android-recents__info {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+}
+
+.android-recents__icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.android-recents__icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.android-recents__info strong {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================================
+ * Animations CSS - shared keyframes and motion preferences
+ * All selectors are namespaced under #android-root / .android-*
+ * ============================================================ */
+
+@keyframes android-ripple {
+    to {
+        opacity: 0;
+        transform: scale(2.6);
+    }
+}
+
+@keyframes maps-pulse {
+    0% {
+        opacity: 0.7;
+        transform: scale(0.5);
+    }
+    70% {
+        opacity: 0;
+        transform: scale(1.15);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.15);
+    }
+}
+
+@keyframes viewer-pop {
+    0% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.35);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes chatgpt-blink {
+    0%,
+    60%,
+    100% {
+        opacity: 0.25;
+        transform: translateY(0);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes android-recents-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes android-splash-pop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #android-root *,
+    #android-root *::before,
+    #android-root *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+ * Lock screen CSS - AOD + PIN keypad
+ * Sits above every Android layer (statusbar 60, navbar 55,
+ * shade 50, apps 30, toast 90) at z-index 200.
+ * ============================================================ */
+
+.android-lock {
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+}
+
+.android-lock.is-hidden {
+    display: none;
+}
+
+/* ---- Always-On Display ---- */
+
+.android-aod {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: opacity 0.5s var(--android-ease);
+}
+
+.android-aod.is-fade {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.android-aod__time {
+    font-size: 66px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.android-aod__date {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* ---- PIN lock screen ---- */
+
+.android-lock__pin {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--android-statusbar-h) + 40px) 0 36px;
+    background: rgba(8, 10, 14, 0.42);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--android-ease);
+}
+
+.android-lock__pin.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.android-lock__pin.is-shaking {
+    animation: android-lock-shake 0.4s var(--android-ease);
+}
+
+@keyframes android-lock-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}
+
+.android-lock__info {
+    text-align: center;
+}
+
+.android-lock__time {
+    font-size: 72px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    line-height: 1.05;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.android-lock__date {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 6px;
+}
+
+.android-lock__auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.android-lock__hint {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    min-height: 18px;
+}
+
+.android-lock__hint.is-error {
+    color: #ff8a90;
+}
+
+.android-lock__dots {
+    display: flex;
+    gap: 14px;
+    min-height: 14px;
+}
+
+.android-lock__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    background: transparent;
+    transition: background 0.15s var(--android-ease), border-color 0.15s var(--android-ease);
+}
+
+.android-lock__dot.is-filled {
+    background: #fff;
+    border-color: #fff;
+}
+
+.android-lock__keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 72px);
+    gap: 12px;
+}
+
+.android-lock__key {
+    height: 68px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s var(--android-ease), transform 0.08s;
+}
+
+.android-lock__key:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.92);
+}
+
+.android-lock__key svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.android-lock__key--blank {
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .android-aod,
+    .android-lock__pin {
+        transition: none;
+    }
+    .android-lock__pin.is-shaking {
+        animation: none;
+    }
+}
+
+/* Compact layout for landscape / short viewports. */
+@media (max-height: 520px) and (orientation: landscape) {
+    .android-aod__time {
+        font-size: 44px;
+    }
+    .android-lock__time {
+        font-size: 44px;
+    }
+    .android-lock__pin {
+        padding: calc(var(--android-statusbar-h) + 14px) 0 12px;
+    }
+    .android-lock__auth {
+        gap: 8px;
+    }
+    .android-lock__dots {
+        min-height: 10px;
+    }
+    .android-lock__keypad {
+        grid-template-columns: repeat(3, 56px);
+        gap: 8px;
+    }
+    .android-lock__key {
+        height: 48px;
+        font-size: 20px;
+    }
+}

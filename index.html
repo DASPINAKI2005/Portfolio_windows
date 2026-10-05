@@ -16,17 +16,21 @@
     <meta property="og:title" content="Pinaki Das — Aspiring AI Engineer | Python Developer | Generative AI Developer">
     <meta property="og:description" content="Aspiring AI Engineer building intelligent applications with Python, LLMs, Prompt Engineering and RAG. Explore the interactive portfolio.">
     <meta property="og:url" content="https://daspinaki2005.github.io/">
-    <meta property="og:image" content="https://daspinaki2005.github.io/assets/wallpapers/wallpaper1.png">
+    <meta property="og:image" content="https://daspinaki2005.github.io/assets/images/wallpapers/wallpaper1.png">
     <meta property="og:image:width" content="1920">
     <meta property="og:image:height" content="1080">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pinaki Das — Aspiring AI Engineer | Python Developer">
     <meta name="twitter:description" content="Interactive AI engineer portfolio: projects, skills, certifications and contact details in a Windows 11 desktop simulation.">
-    <meta name="twitter:image" content="https://daspinaki2005.github.io/assets/wallpapers/wallpaper1.png">
-    <link rel="icon" type="image/png" href="assets/icons/this-pc.png">
+    <meta name="twitter:image" content="https://daspinaki2005.github.io/assets/images/wallpapers/wallpaper1.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#0078d4">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/core.css">
+    <link rel="stylesheet" href="css/windows.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/apps.css">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -61,7 +65,7 @@
                 <li>Email: <a href="mailto:daspinaki2005@gmail.com">daspinaki2005@gmail.com</a></li>
                 <li>GitHub: <a href="https://github.com/DASPINAKI2005">github.com/DASPINAKI2005</a></li>
                 <li>LinkedIn: <a href="https://linkedin.com/in/pinaki-das-9a2860281">linkedin.com/in/pinaki-das-9a2860281</a></li>
-                <li>Resume: <a href="assets/resume/Pinaki_Das_CV.pdf">Download PDF</a></li>
+                <li>Resume: <a href="assets/documents/resume.pdf">Download PDF</a></li>
             </ul>
         </div>
     </noscript>
@@ -70,7 +74,7 @@
          Premium glassmorphism welcome screen. Fullscreen, fixed, and
          z-index 100000 so it sits above every layer (desktop taskbar
          z:10000, context menu z:10001, Android sim layers z<=90).
-         The title copy is injected by welcome-overlay.js based on
+         The title copy is injected by js/welcome-overlay.js based on
          viewport width (768px breakpoint); this markup is untouched
          by the Windows / Android simulations.
          ============================================================ -->
@@ -245,7 +249,13 @@
         </div>
     </template>
 
-    <script src="script.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/desktop.js"></script>
+    <script src="js/windows.js"></script>
+    <script src="js/taskbar.js"></script>
+    <script src="js/start-menu.js"></script>
+    <script src="js/apps.js"></script>
+    <script src="js/main.js"></script>
 
     <!-- ============================================================
          MOBILE EXPERIENCE (Android simulation)
@@ -253,25 +263,19 @@
          Desktop markup/scripts/styles above are untouched.
          ============================================================ -->
     <link rel="stylesheet" href="mobile/css/gate.css">
-    <link rel="stylesheet" href="mobile/css/base.css">
-    <link rel="stylesheet" href="mobile/css/home.css">
-    <link rel="stylesheet" href="mobile/css/app.css">
-    <link rel="stylesheet" href="mobile/css/recents.css">
-    <link rel="stylesheet" href="mobile/css/animations.css">
-    <link rel="stylesheet" href="mobile/css/lock.css">
+    <link rel="stylesheet" href="mobile/css/core.css">
+    <link rel="stylesheet" href="mobile/css/apps.css">
+    <link rel="stylesheet" href="mobile/css/launcher.css">
     <div id="android-root"></div>
     <script src="mobile/js/core.js"></script>
-    <script src="mobile/js/icons.js"></script>
+    <script src="data/profile.js"></script>
+    <script src="data/projects.js"></script>
+    <script src="data/certificates.js"></script>
     <script src="mobile/js/apps.js"></script>
-    <script src="mobile/js/shell.js"></script>
-    <script src="mobile/js/media.js"></script>
-    <script src="mobile/js/home.js"></script>
     <script src="mobile/js/app-manager.js"></script>
-    <script src="mobile/js/recents.js"></script>
-    <script src="mobile/js/lock.js"></script>
-    <script src="mobile/js/android.js"></script>
+    <script src="mobile/js/launcher.js"></script>
 
     <!-- Welcome overlay logic (new) - self-contained, loads last -->
-    <script src="welcome-overlay.js"></script>
+    <script src="js/welcome-overlay.js"></script>
 </body>
 </html>
